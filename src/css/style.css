@@ -1,0 +1,39 @@
+:root {
+  --theme-hue: 70;
+  --color-primary: hsl(255, 20%, 70%);
+  --color-background: hsl(var(--theme-hue), 50%, 90%);
+  --color-text: hsl(var(--theme-hue), 50%, 10%);
+}
+
+@media screen and (prefers-color-scheme: dark) {
+  :root {
+    --color-background: hsl(var(--theme-hue), 0%, 20%);
+    --color-text: hsl(var(--theme-hue), 50%, 90%);
+  }
+}
+
+html,
+body {
+  background-color: var(--color-background);
+  color: var(--color-text);
+
+  font-family: sans-serif;
+}
+
+.gamediv {
+  background-color: var(--color-primary);
+  color: black;
+  border: none;
+  padding: 0.5em;
+  border-radius: 1em;
+  font-weight: 600;
+  height: 7.5em;
+  width: 7.5em;
+  font-size: 2em;
+  align-items: center;
+}
+
+.gamename {
+  position: relative;
+  top: 50%;
+}
