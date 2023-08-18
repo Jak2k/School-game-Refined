@@ -20,7 +20,7 @@ body {
   font-family: sans-serif;
 }
 
-.gamediv {
+.game {
   background-color: var(--color-primary);
   color: black;
   border: none;
