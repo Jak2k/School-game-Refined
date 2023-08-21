@@ -1,7 +1,9 @@
 import { dangerouslySkipEscape, escapeInject } from "vite-plugin-ssr/server";
+import type { ServerHTML, ServerMeta } from "./types";
 
-export function render(ctx) {
-  const meta = ctx.exportsAll.serverMeta[0].exportValue();
+export function render(ctx: any) {
+  const meta: ReturnType<ServerMeta> =
+    ctx.exportsAll.serverMeta[0].exportValue();
   const documentHtml = escapeInject`
     <!DOCTYPE html>
     <html>
@@ -14,7 +16,7 @@ export function render(ctx) {
       </head>
       <body>
         <div id="app">${dangerouslySkipEscape(
-          ctx.exportsAll.serverHTML[0].exportValue()
+          (ctx.exportsAll.serverHTML[0].exportValue as ServerHTML)()
         )}</div>
       </body>
     </html>`;

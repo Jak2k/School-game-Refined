@@ -1,6 +1,7 @@
 import "../style.css";
+import { type ServerHTML, ServerMeta, Init } from "../renderer/types";
 
-export const serverHTML = () => `
+export const serverHTML: ServerHTML = () => `
   <div class="game">
     <span class="gamename">Hello Vite World</span>
     <button id="main">Cycle through colors</button>
@@ -8,15 +9,15 @@ export const serverHTML = () => `
   <div id="debug"></div>
 `;
 
-export const serverMeta = () => {
+export const serverMeta: ServerMeta = () => {
   return {
     title: "Hello Vite World",
     description: "This is the description of the page",
   };
 };
 
-export function init() {
-  const main = document.getElementById("main");
+export const init: Init = () => {
+  const main = document.getElementById("main")!;
   main.style.color = "red";
   main.style.borderColor = "red";
   main.addEventListener("click", () => {
@@ -28,4 +29,4 @@ export function init() {
     main.style.color = nextColor;
     main.style.borderColor = nextColor;
   });
-}
+};
