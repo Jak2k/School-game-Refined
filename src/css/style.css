@@ -22,18 +22,25 @@ body {
 
 .gamediv {
   background-color: var(--color-primary);
-  color: black;
-  border: none;
-  padding: 0.5em;
-  border-radius: 1em;
-  font-weight: 600;
-  height: 7.5em;
-  width: 7.5em;
-  font-size: 2em;
+  justify-content: center;
   align-items: center;
+  height: 15em;
+  width: 15em;
+  margin: auto;
+  border-radius: 3em;
+  flex-direction: column;
+  display: flex;
 }
 
 .gamename {
-  position: relative;
-  top: 50%;
+  text-align: center;
+}
+
+.gamebutton {
+  border-radius: 3.6em;
+  height: 12em;
+  width: 12em;
+  align-self: center;
+  justify-content: center;
+  justify-self: center;
 }

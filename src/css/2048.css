@@ -1,0 +1,21 @@
+body {
+  font-size: 3em;
+}
+
+#box {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-self: center;
+  align-items: center;
+  justify-content: center;
+}
+
+#square {
+  width: 3em;
+  height: 3em;
+  border: 0.1em solid #ffffff;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  display: flex;
+}
