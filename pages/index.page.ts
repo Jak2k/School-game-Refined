@@ -3,8 +3,7 @@ import { type ServerHTML, ServerMeta, Init } from "../renderer/types";
 
 export const serverHTML: ServerHTML = () => `
   <div class="game">
-    <span class="gamename">Hello Vite World</span>
-    <button id="main">Cycle through colors</button>
+    <a href="/2048" class="name">2048</a>
   </div>
   <div id="debug"></div>
 `;
@@ -17,16 +16,5 @@ export const serverMeta: ServerMeta = () => {
 };
 
 export const init: Init = () => {
-  const main = document.getElementById("main")!;
-  main.style.color = "red";
-  main.style.borderColor = "red";
-  main.addEventListener("click", () => {
-    // cycle through colors
-    const colors = ["red", "green", "blue", "yellow"];
-    const currentColor = main.style.color;
-    const nextColor =
-      colors[(colors.indexOf(currentColor) + 1) % colors.length];
-    main.style.color = nextColor;
-    main.style.borderColor = nextColor;
-  });
+  
 };
