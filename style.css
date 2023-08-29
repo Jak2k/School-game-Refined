@@ -20,6 +20,13 @@ body {
   font-family: sans-serif;
 }
 
+#games {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10em, 1fr));
+  grid-gap: 1em;
+  padding: 1em;
+}
+
 .game {
   background-color: var(--color-primary);
   color: black;
@@ -30,9 +37,6 @@ body {
   aspect-ratio: 1 / 1;
   font-size: 2em;
   align-items: center;
-  max-width: 80vw;
-  max-height: 80vh;
-  
 }
 
 .gamename {

@@ -3,6 +3,7 @@ export function render(ctx: any) {
 
   // @ts-ignore
   if (import.meta.env.MODE === "development") {
-    document.getElementById("debug")!.innerHTML = "Success!";
+    const debug = document.getElementById("debug");
+    if (debug) debug.innerHTML = "Success!";
   }
 }
