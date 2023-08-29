@@ -30,6 +30,4 @@ export const serverMeta: ServerMeta = () => {
   };
 };
 
-export const init: Init = () => {
-  
-};
+export const init: Init = () => {};
