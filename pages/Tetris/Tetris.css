@@ -2,14 +2,28 @@
   /* Create a grid
    It has to always be 20 divs in height and 10 divs in width*/
   display: grid;
-  grid-template-rows: repeat(20, 1fr);
-  grid-template-columns: repeat(10, 1fr);
-  grid-gap: 1px;
+  grid-template-rows: repeat(20, 0.1fr);
+  grid-template-columns: repeat(10, 0.1fr);
   width: 100%;
   max-width: 400px;
-  background: #111;
+  background: #ffffff;
+  height: 100vh;
   margin: 0 auto;
   padding: 1px;
   box-sizing: border-box;
-  border: 2px solid #ffffff;
+  border: solid #ffffff;
+  /* center the grid in the middle of the window*/
+  justify-items: center;
+  align-items: center;
+  width: 100vw;
+  margin-left: 5em;
+  margin-right: auto;
+}
+
+div {
+  /* Style the divs inside the grid */
+  background: #111;
+  border: #ffffff;
+  height: 2em;
+  width: 2em;
 }
