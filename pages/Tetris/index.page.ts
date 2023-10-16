@@ -2,8 +2,6 @@ import "../../style.css";
 import "./Tetris.css";
 import { type ServerHTML, ServerMeta, Init } from "../../renderer/types";
 
-//define classList in the server site to avoid error
-
 if (typeof document === "undefined") {
   // @ts-ignore
   global.document = {
@@ -15,11 +13,11 @@ if (typeof document === "undefined") {
 
 let squares: HTMLDivElement[] = [];
 const startBtn = document.querySelector("#start-button")!;
-let nextRandom = 0;
 let currentPosition = 0;
 let currentTetrominoe = 0;
 let currentColor = 0;
-let filledsquares = [];
+let filledsquares: any[][] = [];
+let running = false;
 const theTetrominoes = [
   [
     currentPosition + 0,
@@ -88,9 +86,14 @@ export const init: Init = () => {
   startBtn.addEventListener("click", () => {
     newTetrominoe();
     displayShape();
-    let timerId = setInterval(moveDown, 1000);
+    let timerId = setInterval(moveDown, 200);
+    running = true;
   });
+
   document.addEventListener("keydown", (e) => {
+    if (running === false) {
+      return;
+    }
     switch (e.key) {
       case "ArrowLeft":
         moveLeft();
@@ -98,9 +101,9 @@ export const init: Init = () => {
       case "ArrowRight":
         moveRight();
         break;
-      // case "ArrowDown":
-      //  moveDown();
-      //  break;
+      case "ArrowDown":
+        moveDown();
+        break;
       default:
         break;
     }
@@ -112,8 +115,30 @@ function newTetrominoe() {
   currentColor = Math.floor(Math.random() * colors.length);
 }
 
+function saveTetrominoe() {
+  theTetrominoes[currentTetrominoe].forEach((index: any) => {
+    filledsquares.push([index + currentPosition, colors[currentColor]]);
+  });
+  currentPosition = 0;
+  newTetrominoe();
+  displayShape();
+}
+
 function moveLeft() {
   if (currentPosition % 10 === 0) {
+    return;
+  }
+  let end = false;
+  for (let i = 0; i < theTetrominoes[currentTetrominoe].length; i++) {
+    const index = currentPosition + theTetrominoes[currentTetrominoe][i];
+
+    filledsquares.forEach((filledsquare) => {
+      if (filledsquare[0] === index - 1) {
+        end = true;
+      }
+    });
+  }
+  if (end) {
     return;
   }
   currentPosition--;
@@ -122,15 +147,44 @@ function moveLeft() {
 }
 
 function moveRight() {
-  if (currentPosition % 10 === 9) {
+  let end = false;
+  for (let i = 0; i < theTetrominoes[currentTetrominoe].length; i++) {
+    const index = currentPosition + theTetrominoes[currentTetrominoe][i];
+
+    if ((index + 1) % 10 === 0) {
+      end = true;
+    }
+    filledsquares.forEach((filledsquare) => {
+      if (filledsquare[0] === index + 1) {
+        end = true;
+      }
+    });
+  }
+  if (end) {
     return;
   }
+
   currentPosition++;
   undraw();
   displayShape();
 }
 
 function moveDown() {
+  let end = false;
+  theTetrominoes[currentTetrominoe].forEach((index: any) => {
+    if (index + currentPosition >= 190) {
+      end = true;
+    }
+    filledsquares.forEach((filledsquare) => {
+      if (filledsquare[0] === index + currentPosition + 10) {
+        end = true;
+      }
+    });
+  });
+  if (end) {
+    saveTetrominoe();
+    return;
+  }
   undraw();
   currentPosition += 10;
   displayShape();
@@ -141,15 +195,12 @@ function displayShape() {
     index += currentPosition;
     squares[index].style.backgroundColor = colors[currentColor];
   });
+  for (let i = 0; i < filledsquares.length; i++) {
+    squares[filledsquares[i][0]].style.backgroundColor = filledsquares[i][1];
+  }
 }
 
 function undraw() {
-  theTetrominoes[currentTetrominoe].forEach((index: any) => {
-    if (index >= 190) {
-      newTetrominoe();
-      return;
-    }
-  });
   squares.forEach((index: any) => {
     squares[index.id].style.backgroundColor = "black";
   });
