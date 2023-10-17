@@ -18,37 +18,43 @@ let currentTetrominoe = 0;
 let currentColor = 0;
 let filledsquares: any[][] = [];
 let running = false;
+let currentrotation = 0;
 const theTetrominoes = [
   [
-    currentPosition + 0,
-    currentPosition + 10,
-    currentPosition + 20,
-    currentPosition + 21,
-  ], // lTetromino
+    [0, 10, 20, 21],
+    [1, 2, 3, 10], //90° right
+    [1, 2, 11, 21], //180° right
+    [2, 10, 11, 12], //270° right
+  ],
+  // lTetromino
   [
-    currentPosition + 0,
-    currentPosition + 1,
-    currentPosition + 11,
-    currentPosition + 12,
+    [0, 1, 11, 12],
+    [1, 11, 10, 20],
+    [0, 1, 11, 12],
+    [1, 11, 10, 20],
   ], // zTetromino
   [
-    currentPosition + 0,
-    currentPosition + 1,
-    currentPosition + 2,
-    currentPosition + 11,
+    [0, 1, 2, 11],
+    [1, 10, 11, 21],
+    [1, 10, 11, 12],
+    [1, 11, 21, 12],
   ], // tTetromino
   [
-    currentPosition + 0,
-    currentPosition + 1,
-    currentPosition + 10,
-    currentPosition + 11,
+    [0, 1, 10, 11],
+    [0, 1, 10, 11],
+    [0, 1, 10, 11],
+    [0, 1, 10, 11],
   ], // oTetromino
   [
-    currentPosition + 0,
-    currentPosition + 10,
-    currentPosition + 20,
-    currentPosition + 30,
+    [0, 10, 20, 21],
+    [0, 1, 2, 3], //90° right
+    [0, 10, 20, 30], //180° right
+    [1, 2, 3, 4], //270° right
   ], // iTetromino
+];
+
+const rotateTetrominoes1 = [
+  [], //l tetrominoe
 ];
 
 const colors = ["orange", "red", "purple", "green", "blue", "yellow", "cyan"];
@@ -57,7 +63,6 @@ function createGrid() {
   const grid = document.querySelector(".grid")!;
   for (let i = 0; i < 200; i++) {
     const div = document.createElement("div");
-    div.innerHTML = i.toString();
     div.classList.add("grid-item");
     div.id = i.toString();
     div.style.backgroundColor = "black";
@@ -86,7 +91,7 @@ export const init: Init = () => {
   startBtn.addEventListener("click", () => {
     newTetrominoe();
     displayShape();
-    let timerId = setInterval(moveDown, 200);
+    let timerId = setInterval(moveDown, 1000);
     running = true;
   });
 
@@ -130,7 +135,8 @@ function moveLeft() {
   }
   let end = false;
   for (let i = 0; i < theTetrominoes[currentTetrominoe].length; i++) {
-    const index = currentPosition + theTetrominoes[currentTetrominoe][i];
+    const index =
+      currentPosition + theTetrominoes[currentTetrominoe][i][currentrotation];
 
     filledsquares.forEach((filledsquare) => {
       if (filledsquare[0] === index - 1) {
@@ -149,7 +155,8 @@ function moveLeft() {
 function moveRight() {
   let end = false;
   for (let i = 0; i < theTetrominoes[currentTetrominoe].length; i++) {
-    const index = currentPosition + theTetrominoes[currentTetrominoe][i];
+    const index =
+      currentPosition + theTetrominoes[currentTetrominoe][i][currentrotation];
 
     if ((index + 1) % 10 === 0) {
       end = true;
@@ -191,17 +198,20 @@ function moveDown() {
 }
 
 function displayShape() {
-  theTetrominoes[currentTetrominoe].forEach((index: any) => {
-    index += currentPosition;
-    squares[index].style.backgroundColor = colors[currentColor];
-  });
+  theTetrominoes[currentTetrominoe][currentrotation].forEach(
+    (index: number) => {
+      index += currentPosition;
+      (squares[index] as HTMLDivElement).style.backgroundColor =
+        colors[currentColor];
+    }
+  );
   for (let i = 0; i < filledsquares.length; i++) {
     squares[filledsquares[i][0]].style.backgroundColor = filledsquares[i][1];
   }
 }
 
 function undraw() {
-  squares.forEach((index: any) => {
-    squares[index.id].style.backgroundColor = "black";
+  squares.forEach((index: HTMLDivElement) => {
+    index.style.backgroundColor = "black";
   });
 }
