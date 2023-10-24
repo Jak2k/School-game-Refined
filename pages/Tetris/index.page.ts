@@ -22,8 +22,8 @@ let currentrotation = 0;
 const theTetrominoes = [
   [
     [0, 10, 20, 21],
-    [1, 2, 3, 10], //90° right
-    [1, 2, 11, 21], //180° right
+    [0, 1, 2, 10], //90° right
+    [0, 1, 11, 21], //180° right
     [2, 10, 11, 12], //270° right
   ],
   // lTetromino
@@ -46,15 +46,11 @@ const theTetrominoes = [
     [0, 1, 10, 11],
   ], // oTetromino
   [
-    [0, 10, 20, 21],
+    [0, 10, 20, 30],
     [0, 1, 2, 3], //90° right
     [0, 10, 20, 30], //180° right
     [1, 2, 3, 4], //270° right
   ], // iTetromino
-];
-
-const rotateTetrominoes1 = [
-  [], //l tetrominoe
 ];
 
 const colors = ["orange", "red", "purple", "green", "blue", "yellow", "cyan"];
@@ -109,6 +105,9 @@ export const init: Init = () => {
       case "ArrowDown":
         moveDown();
         break;
+      case "ArrowUp":
+        rotatetetrominoe();
+        break;
       default:
         break;
     }
@@ -121,7 +120,7 @@ function newTetrominoe() {
 }
 
 function saveTetrominoe() {
-  theTetrominoes[currentTetrominoe].forEach((index: any) => {
+  theTetrominoes[currentTetrominoe][currentrotation].forEach((index: any) => {
     filledsquares.push([index + currentPosition, colors[currentColor]]);
   });
   currentPosition = 0;
@@ -130,13 +129,14 @@ function saveTetrominoe() {
 }
 
 function moveLeft() {
-  if (currentPosition % 10 === 0) {
-    return;
-  }
   let end = false;
   for (let i = 0; i < theTetrominoes[currentTetrominoe].length; i++) {
     const index =
-      currentPosition + theTetrominoes[currentTetrominoe][i][currentrotation];
+      currentPosition + theTetrominoes[currentTetrominoe][currentrotation][i];
+      
+      if (currentPosition % 10 === 0) {
+        return;
+      }
 
     filledsquares.forEach((filledsquare) => {
       if (filledsquare[0] === index - 1) {
@@ -154,9 +154,13 @@ function moveLeft() {
 
 function moveRight() {
   let end = false;
-  for (let i = 0; i < theTetrominoes[currentTetrominoe].length; i++) {
+  for (
+    let i = 0;
+    i < theTetrominoes[currentTetrominoe][currentrotation].length;
+    i++
+  ) {
     const index =
-      currentPosition + theTetrominoes[currentTetrominoe][i][currentrotation];
+      currentPosition + theTetrominoes[currentTetrominoe][currentrotation][i];
 
     if ((index + 1) % 10 === 0) {
       end = true;
@@ -178,7 +182,7 @@ function moveRight() {
 
 function moveDown() {
   let end = false;
-  theTetrominoes[currentTetrominoe].forEach((index: any) => {
+  theTetrominoes[currentTetrominoe][currentrotation].forEach((index: any) => {
     if (index + currentPosition >= 190) {
       end = true;
     }
@@ -194,6 +198,46 @@ function moveDown() {
   }
   undraw();
   currentPosition += 10;
+  displayShape();
+}
+
+function rotatetetrominoe() {
+  let temprotation = currentrotation;
+  if (temprotation === 3) {
+    temprotation = 0;
+  } else {
+    temprotation++;
+  }
+  let end = false;
+  for(let i = 0; i < theTetrominoes[currentTetrominoe][temprotation].length; i++) {
+    if (theTetrominoes[currentTetrominoe][temprotation][i] + currentPosition >= 190) {
+      end = true;
+    }
+    filledsquares.forEach((filledsquare) => {
+      if (filledsquare[0] === theTetrominoes[currentTetrominoe][temprotation][i] + currentPosition) {
+        end = true;
+      }
+      if (theTetrominoes[currentTetrominoe][temprotation][i] + currentPosition < 0) {
+        end = true;
+      }
+      if ((theTetrominoes[currentTetrominoe][currentrotation][i] + currentPosition) % 10 === 0 && (theTetrominoes[currentTetrominoe][temprotation][i] + currentPosition) % 10 === 9) {
+        end = true;
+      }
+      if ((theTetrominoes[currentTetrominoe][currentrotation][i] + currentPosition) % 10 === 9 && (theTetrominoes[currentTetrominoe][temprotation][i] + currentPosition) % 10 === 0) {
+        end = true;
+      }
+    });
+  }
+
+  if (end) {
+    return;
+  }
+  if (currentrotation === 3) {
+    currentrotation = 0;
+  } else {
+    currentrotation++;
+  }
+  undraw();
   displayShape();
 }
 

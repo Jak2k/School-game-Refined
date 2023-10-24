@@ -4,26 +4,24 @@
   display: grid;
   grid-template-rows: repeat(20, 0.1fr);
   grid-template-columns: repeat(10, 0.1fr);
-  width: 100%;
-  max-width: 400px;
+  max-width: 21.5em;
   background: #ffffff;
-  height: 100vh;
-  margin: 0 auto;
-  padding: 1px;
+  height: 43em;
+  border-radius: 0.5em;
   box-sizing: border-box;
-  border: solid #ffffff;
   /* center the grid in the middle of the window*/
   justify-items: center;
   align-items: center;
-  width: 100vw;
   margin-left: 5em;
   margin-right: auto;
 }
 
-div {
+.grid-item {
   /* Style the divs inside the grid */
   background: #111;
   border: #ffffff;
   height: 2em;
   width: 2em;
+  border-radius: 0.5em;
+  border: 0.05em solid #ffffff;
 }
