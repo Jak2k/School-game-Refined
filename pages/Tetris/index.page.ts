@@ -154,7 +154,7 @@ function checkLines() {
   });
   tempfilledsquares.sort();
   for (let i = Tetrominoelines.length - 1; i >= 0; i--) {
-    //hier letztes mal aufgehört
+    for(let n = Tetrominoelines[i]; n >= 0; n--) {
     if (tempfilledsquares.includes(Tetrominoelines[i][0])) {
       Tetrominoelines.splice(i, 1);
     }
