@@ -10,7 +10,7 @@ body {
   justify-content: center;
 }
 
-#square {
+.square {
   width: 3em;
   height: 3em;
   border: 0.1em solid #ffffff;
