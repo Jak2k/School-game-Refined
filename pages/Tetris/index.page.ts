@@ -144,29 +144,91 @@ export const init: Init = () => {
 function deleteLine() {}
 
 function checkLines() {
-  let tempfilledsquares: number[] = [];
-  let end = false;
+  let tempfilledsquares: number[][] = [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+  ];
   filledsquares.forEach((forms) => {
-    console.log(forms[0]);
     forms[0].forEach((index: number) => {
-      tempfilledsquares.push(index);
+      if (index < 10) {
+        tempfilledsquares[0].push(index);
+      } else if (index < 20) {
+        tempfilledsquares[1].push(index);
+      } else if (index < 30) {
+        tempfilledsquares[2].push(index);
+      } else if (index < 40) {
+        tempfilledsquares[3].push(index);
+      } else if (index < 50) {
+        tempfilledsquares[4].push(index);
+      } else if (index < 60) {
+        tempfilledsquares[5].push(index);
+      } else if (index < 70) {
+        tempfilledsquares[6].push(index);
+      } else if (index < 80) {
+        tempfilledsquares[7].push(index);
+      } else if (index < 90) {
+        tempfilledsquares[8].push(index);
+      } else if (index < 100) {
+        tempfilledsquares[9].push(index);
+      } else if (index < 110) {
+        tempfilledsquares[10].push(index);
+      } else if (index < 120) {
+        tempfilledsquares[11].push(index);
+      } else if (index < 130) {
+        tempfilledsquares[12].push(index);
+      } else if (index < 140) {
+        tempfilledsquares[13].push(index);
+      } else if (index < 150) {
+        tempfilledsquares[14].push(index);
+      } else if (index < 160) {
+        tempfilledsquares[15].push(index);
+      } else if (index < 170) {
+        tempfilledsquares[16].push(index);
+      } else if (index < 180) {
+        tempfilledsquares[17].push(index);
+      } else if (index < 190) {
+        tempfilledsquares[18].push(index);
+      } else if (index < 200) {
+        tempfilledsquares[19].push(index);
+      }
     });
   });
   tempfilledsquares.sort();
+
+  let end = false;
+
+  for(let i = tempfilledsquares.length - 1; i >= 0; i--) {
+    if (tempfilledsquares[i].length === 10) {
+      
+    }
+  }
+
+
   for (let i = Tetrominoelines.length - 1; i >= 0; i--) {
-    Tetrominoelines[i].forEach((index: number) => {
-      if (tempfilledsquares.includes(Tetrominoelines[i][index])) {
-        filledsquares.forEach((forms) => {
-          forms[0].forEach((index: number) => {
-            if (index === Tetrominoelines[i][index]) {
-              console.log(forms[0]);
-              forms[0].splice(index, 1);
-              console.log(forms[0]);
-            }
-          });
-        });
+    for(let n = Tetrominoelines[i].length - 1; n >= 0; n--) {
+      if (!tempfilledsquares[i].includes(Tetrominoelines[i][n])) {
+        
       }
-    });
+    }
+    
   }
 }
 
@@ -247,8 +309,14 @@ function moveRight() {
 
 function moveDown() {
   let end = false;
-  theTetrominoes[currentTetrominoe][currentrotation].forEach((index: any) => {
-    if (index + currentPosition >= 190) {
+  for (
+    let i = 0;
+    i < theTetrominoes[currentTetrominoe][currentrotation].length;
+    i++
+  ) {
+    let index =
+      currentPosition + theTetrominoes[currentTetrominoe][currentrotation][i];
+    if (index >= 190) {
       end = true;
     }
     filledsquares.forEach((filledsquare) => {
@@ -256,14 +324,14 @@ function moveDown() {
         if (
           filledindex ===
           currentPosition +
-            theTetrominoes[currentTetrominoe][currentrotation][index] +
+            theTetrominoes[currentTetrominoe][currentrotation][i] +
             10
         ) {
           end = true;
         }
       });
     });
-  });
+  }
   if (end) {
     saveTetrominoe();
     return;
