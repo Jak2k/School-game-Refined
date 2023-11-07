@@ -141,27 +141,34 @@ export const init: Init = () => {
   });
 };
 
-function deleteLine() {
-
-}
+function deleteLine() {}
 
 function checkLines() {
   let tempfilledsquares: number[] = [];
+  let end = false;
   filledsquares.forEach((forms) => {
+    console.log(forms[0]);
     forms[0].forEach((index: number) => {
       tempfilledsquares.push(index);
     });
   });
   tempfilledsquares.sort();
   for (let i = Tetrominoelines.length - 1; i >= 0; i--) {
-    for(let n = Tetrominoelines[i]; n >= 0; n--) {
-    if (tempfilledsquares.includes(Tetrominoelines[i][0])) {
-      Tetrominoelines.splice(i, 1);
-    }
+    Tetrominoelines[i].forEach((index: number) => {
+      if (tempfilledsquares.includes(Tetrominoelines[i][index])) {
+        filledsquares.forEach((forms) => {
+          forms[0].forEach((index: number) => {
+            if (index === Tetrominoelines[i][index]) {
+              console.log(forms[0]);
+              forms[0].splice(index, 1);
+              console.log(forms[0]);
+            }
+          });
+        });
+      }
+    });
   }
 }
-
-
 
 function newTetrominoe() {
   currentTetrominoe = Math.floor(Math.random() * theTetrominoes.length);
@@ -169,9 +176,12 @@ function newTetrominoe() {
 }
 
 function saveTetrominoe() {
+  let temparray: number[] = [];
   theTetrominoes[currentTetrominoe][currentrotation].forEach((index: any) => {
-    filledsquares.push([index + currentPosition, colors[currentColor]]);
+    temparray.push(index + currentPosition);
   });
+  filledsquares.push([temparray, colors[currentColor]]);
+  temparray = [];
   currentrotation = 0;
   currentPosition = 0;
   newTetrominoe();
@@ -190,9 +200,11 @@ function moveLeft() {
     }
 
     filledsquares.forEach((filledsquare) => {
-      if (filledsquare[0] === index - 1) {
-        end = true;
-      }
+      filledsquare[0].forEach((filledindex: number) => {
+        if (filledindex === index - 1) {
+          end = true;
+        }
+      });
     });
   }
   if (end) {
@@ -217,9 +229,11 @@ function moveRight() {
       end = true;
     }
     filledsquares.forEach((filledsquare) => {
-      if (filledsquare[0] === index + 1) {
-        end = true;
-      }
+      filledsquare[0].forEach((filledindex: number) => {
+        if (filledindex === index + 1) {
+          end = true;
+        }
+      });
     });
   }
   if (end) {
@@ -238,9 +252,16 @@ function moveDown() {
       end = true;
     }
     filledsquares.forEach((filledsquare) => {
-      if (filledsquare[0] === index + currentPosition + 10) {
-        end = true;
-      }
+      filledsquare[0].forEach((filledindex: number) => {
+        if (
+          filledindex ===
+          currentPosition +
+            theTetrominoes[currentTetrominoe][currentrotation][index] +
+            10
+        ) {
+          end = true;
+        }
+      });
     });
   });
   if (end) {
@@ -330,7 +351,9 @@ function displayShape() {
     }
   );
   for (let i = 0; i < filledsquares.length; i++) {
-    squares[filledsquares[i][0]].style.backgroundColor = filledsquares[i][1];
+    filledsquares[i][0].forEach((index: number) => {
+      squares[index].style.backgroundColor = filledsquares[i][1];
+    });
   }
 }
 
