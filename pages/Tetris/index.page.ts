@@ -49,7 +49,7 @@ const theTetrominoes = [
     [0, 10, 20, 30],
     [0, 1, 2, 3], //90° right
     [0, 10, 20, 30], //180° right
-    [1, 2, 3, 4], //270° right
+    [0, 1, 2, 3], //270° right
   ], // iTetromino
 ];
 
@@ -79,21 +79,26 @@ let Tetrominoelines = [
 const colors = ["orange", "red", "purple", "green", "blue", "yellow", "cyan"];
 
 function createGrid() {
-  const grid = document.querySelector(".grid")!;
+  let grid = "";
   for (let i = 0; i < 200; i++) {
-    const div = document.createElement("div");
+    /* const div = document.createElement("div");
     div.classList.add("grid-item");
     div.id = i.toString();
     div.style.backgroundColor = "black";
     div.style.borderBlockColor = "white";
     squares.push(div);
-    grid.appendChild(div);
+    grid.appendChild(div); */
+    grid += `<div class="grid-item" style="background-color: black; border-color: white"
+     id="${i.toString()}"></div>`;
   }
+
+  return grid;
 }
 
 export const serverHTML: ServerHTML = () => `
     <a href="..">Back</a>
     <div class="grid">
+    ${createGrid()}
     </div>
     <button id="start-button">Start</button>
 `;
@@ -106,8 +111,14 @@ export const serverMeta: ServerMeta = () => {
 };
 
 export const init: Init = () => {
-  createGrid();
   startBtn.addEventListener("click", () => {
+    for (let i = 0; i < 200; i++) {
+      const square = document.getElementById(i.toString());
+      if (square instanceof HTMLDivElement) {
+        squares.push(square);
+      }
+    }
+
     if (running === true) {
       return;
     }
@@ -170,44 +181,8 @@ function checkLines() {
     forms[0].forEach((index: number) => {
       if (index < 10) {
         tempfilledsquares[0].push(index);
-      } else if (index < 20) {
-        tempfilledsquares[1].push(index);
-      } else if (index < 30) {
-        tempfilledsquares[2].push(index);
-      } else if (index < 40) {
-        tempfilledsquares[3].push(index);
-      } else if (index < 50) {
-        tempfilledsquares[4].push(index);
-      } else if (index < 60) {
-        tempfilledsquares[5].push(index);
-      } else if (index < 70) {
-        tempfilledsquares[6].push(index);
-      } else if (index < 80) {
-        tempfilledsquares[7].push(index);
-      } else if (index < 90) {
-        tempfilledsquares[8].push(index);
-      } else if (index < 100) {
-        tempfilledsquares[9].push(index);
-      } else if (index < 110) {
-        tempfilledsquares[10].push(index);
-      } else if (index < 120) {
-        tempfilledsquares[11].push(index);
-      } else if (index < 130) {
-        tempfilledsquares[12].push(index);
-      } else if (index < 140) {
-        tempfilledsquares[13].push(index);
-      } else if (index < 150) {
-        tempfilledsquares[14].push(index);
-      } else if (index < 160) {
-        tempfilledsquares[15].push(index);
-      } else if (index < 170) {
-        tempfilledsquares[16].push(index);
-      } else if (index < 180) {
-        tempfilledsquares[17].push(index);
-      } else if (index < 190) {
-        tempfilledsquares[18].push(index);
-      } else if (index < 200) {
-        tempfilledsquares[19].push(index);
+      } else {
+        tempfilledsquares[Math.floor(index / 10 - 1)].push(index);
       }
     });
   });
@@ -215,20 +190,16 @@ function checkLines() {
 
   let end = false;
 
-  for(let i = tempfilledsquares.length - 1; i >= 0; i--) {
+  for (let i = tempfilledsquares.length - 1; i >= 0; i--) {
     if (tempfilledsquares[i].length === 10) {
-      
     }
   }
 
-
   for (let i = Tetrominoelines.length - 1; i >= 0; i--) {
-    for(let n = Tetrominoelines[i].length - 1; n >= 0; n--) {
+    for (let n = Tetrominoelines[i].length - 1; n >= 0; n--) {
       if (!tempfilledsquares[i].includes(Tetrominoelines[i][n])) {
-        
       }
     }
-    
   }
 }
 
@@ -355,49 +326,36 @@ function rotatetetrominoe() {
     i++
   ) {
     if (
-      theTetrominoes[currentTetrominoe][temprotation][i] + currentPosition >=
+      theTetrominoes[currentTetrominoe][temprotation][i] + currentrotation >=
       190
     ) {
       end = true;
     }
-    filledsquares.forEach((filledsquare) => {
-      if (
-        filledsquare[0] ===
-        theTetrominoes[currentTetrominoe][temprotation][i] + currentPosition
-      ) {
-        end = true;
-      }
-      if (
-        theTetrominoes[currentTetrominoe][temprotation][i] + currentPosition <
-        0
-      ) {
-        end = true;
-      }
-      if (
-        (theTetrominoes[currentTetrominoe][currentrotation][i] +
-          currentPosition) %
-          10 ===
-          0 &&
-        (theTetrominoes[currentTetrominoe][temprotation][i] + currentPosition) %
-          10 ===
-          9
-      ) {
-        end = true;
-      }
-      if (
-        (theTetrominoes[currentTetrominoe][currentrotation][i] +
-          currentPosition) %
-          10 <=
-          9 &&
-        (theTetrominoes[currentTetrominoe][temprotation][i] + currentPosition) %
-          10 ===
-          0
-      ) {
-        end = true;
-      }
-    });
   }
 
+  theTetrominoes[currentTetrominoe][currentrotation].forEach(
+    (currentblock: number) => {
+      theTetrominoes[currentTetrominoe][temprotation].forEach(
+        (newblock: number) => {
+          if (
+            (currentblock + currentPosition) % 10 === 9 &&
+            (newblock + currentPosition) % 10 === 0
+          ) {
+            end = true;
+          }
+        }
+      );
+    }
+  );
+
+  if (
+    theTetrominoes[currentTetrominoe] === theTetrominoes[4] &&
+    currentPosition % 10 >= 7 
+  ) {
+    if(currentrotation === 0 || currentrotation === 2){
+      end = true;
+    }
+  }
   if (end) {
     return;
   }
