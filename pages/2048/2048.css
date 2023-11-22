@@ -18,4 +18,5 @@ body {
   text-align: center;
   align-items: center;
   display: flex;
+  background-color: darkgrey;
 }

@@ -32,10 +32,11 @@ export const init: Init = () => {
   const startButton = document.querySelector("#startbutton")
 
   let positions = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-  let count:number = 0;
 
   let newpiece:number = 0;
   let spawn:number = 0;
+  let pos:string = "";
+  let count:number = 0;
 
   startButton!.addEventListener("click", () => {
     createnewpiece()
@@ -67,6 +68,7 @@ export const init: Init = () => {
   window.addEventListener("keydown", (e) => {
 
     if(e.key === "ArrowLeft") {
+      console.log("left")
       moveleft();
       //Combine
 
@@ -88,20 +90,141 @@ export const init: Init = () => {
         }
       }
       moveleft();
-      
-      read();
+      createnewpiece();
 
     }else if(e.key === "ArrowRight") {
 
+      moveright();
+
+      //Combine
+      for (let index = 0; index < 16; index = index+4) {
+
+        if(positions[index+3] == positions[index+2]) {
+          positions[index+3] = positions[index+3]*2;
+          positions[index+2] = 0;
+        }
+
+        if(positions[index+2] == positions[index+1]) {
+          positions[index+2] = positions[index+2]*2;
+          positions[index+1] = 0;
+        }
+
+        if(positions[index+1] == positions[index+0]) {
+          positions[index+1] = positions[index+1]*2;
+          positions[index+0] = 0;
+        }
+      }
+      moveright();
+      createnewpiece();
+
     }else if(e.key === "ArrowUp") {
+
+      moveup();
+
+      //Combine
+      for (let index = 0; index < 4; index++) {
+
+        if(positions[index] == positions[index+4]) {
+          positions[index] = positions[index]*2;
+          positions[index+4] = 0;
+        }
+
+        if(positions[index+4] == positions[index+8]) {
+          positions[index+4] = positions[index+4]*2;
+          positions[index+8] = 0;
+        }
+
+        if(positions[index+8] == positions[index+12]) {
+          positions[index+8] = positions[index+8]*2;
+          positions[index+12] = 0;
+        }
+      }
+
+      moveup();
+      createnewpiece();
 
     }else if(e.key === "ArrowDown") {
 
+      movedown();
+
+      //Combine
+      for (let index = 0; index < 4; index++) {
+
+        if(positions[index+12] == positions[index+8]) {
+          positions[index+12] = positions[index+12]*2;
+          positions[index+8] = 0;
+        }
+
+        if(positions[index+8] == positions[index+4]) {
+          positions[index+8] = positions[index+8]*2;
+          positions[index+4] = 0;
+        }
+
+        if(positions[index+4] == positions[index]) {
+          positions[index+4] = positions[index+4]*2;
+          positions[index] = 0;
+        }
+      }
+
+      movedown();
+      createnewpiece();
+    
     }
 
-
-
   });
+
+  function posi() {
+    switch (count) {
+      case 0:
+        pos = "a";
+        break;
+      case 1:
+        pos = "b";
+        break;
+      case 2:
+        pos = "c";
+        break;
+      case 3:
+        pos = "d";
+        break;
+      case 4:
+        pos = "e";
+        break;
+      case 5:
+        pos = "f";
+        break;
+      case 6:
+        pos = "g";
+        break;
+      case 7:
+        pos = "h";
+        break;
+      case 8:
+        pos = "i";
+        break;
+      case 9:
+        pos = "j";
+        break;
+      case 10:
+        pos = "k";
+        break;
+      case 11:
+        pos = "l";
+        break;
+      case 12:
+        pos = "m";
+        break;
+      case 13:
+        pos = "n";
+        break;
+      case 14:
+        pos = "o";
+        break;
+      case 15:
+        pos = "p";
+        break;
+    }
+  }
 
 
 
@@ -122,12 +245,250 @@ export const init: Init = () => {
     document.getElementById("n")!.innerHTML = positions[13].toString();
     document.getElementById("o")!.innerHTML = positions[14].toString();
     document.getElementById("p")!.innerHTML = positions[15].toString();
+
+    if (positions[0] == 0) {
+      document.getElementById("a")!.innerHTML = "";
+      document.getElementById("a")!.style.backgroundColor = "darkgrey";
+    }
+    if (positions[1] == 0) {
+      document.getElementById("b")!.innerHTML = "";
+      document.getElementById("b")!.style.backgroundColor = "darkgrey";
+    }
+    if (positions[2] == 0) {
+      document.getElementById("c")!.innerHTML = "";
+      document.getElementById("c")!.style.backgroundColor = "darkgrey";
+    }
+    if (positions[3] == 0) {
+      document.getElementById("d")!.innerHTML = "";
+      document.getElementById("d")!.style.backgroundColor = "darkgrey";
+    }
+    if (positions[4] == 0) {
+      document.getElementById("e")!.innerHTML = "";
+      document.getElementById("e")!.style.backgroundColor = "darkgrey";
+    }
+    if (positions[5] == 0) {
+      document.getElementById("f")!.innerHTML = "";
+      document.getElementById("f")!.style.backgroundColor = "darkgrey";
+    }
+    if (positions[6] == 0) {
+      document.getElementById("g")!.innerHTML = "";
+      document.getElementById("g")!.style.backgroundColor = "darkgrey";
+    }
+    if (positions[7] == 0) {
+      document.getElementById("h")!.innerHTML = "";
+      document.getElementById("h")!.style.backgroundColor = "darkgrey";
+    }
+    if (positions[8] == 0) {
+      document.getElementById("i")!.innerHTML = "";
+      document.getElementById("i")!.style.backgroundColor = "darkgrey";
+    }
+    if (positions[9] == 0) {
+      document.getElementById("j")!.innerHTML = "";
+      document.getElementById("j")!.style.backgroundColor = "darkgrey";
+    }
+    if (positions[10] == 0) {
+      document.getElementById("k")!.innerHTML = "";
+      document.getElementById("k")!.style.backgroundColor = "darkgrey";
+    }
+    if (positions[11] == 0) {
+      document.getElementById("l")!.innerHTML = "";
+      document.getElementById("l")!.style.backgroundColor = "darkgrey";
+    }
+    if (positions[12] == 0) {
+      document.getElementById("m")!.innerHTML = "";
+      document.getElementById("m")!.style.backgroundColor = "darkgrey";
+    }
+    if (positions[13] == 0) {
+      document.getElementById("n")!.innerHTML = "";
+      document.getElementById("n")!.style.backgroundColor = "darkgrey";
+    }
+    if (positions[14] == 0) {
+      document.getElementById("o")!.innerHTML = "";
+      document.getElementById("o")!.style.backgroundColor = "darkgrey";
+    }
+    if (positions[15] == 0) {
+      document.getElementById("p")!.innerHTML = "";
+      document.getElementById("p")!.style.backgroundColor = "darkgrey";
+    }
+    
+    //Color
+    while(count < 16) {
+      posi();
+      if(positions[count]==2) {
+        document.getElementById(pos)!.style.backgroundColor = "blue";
+      }
+      pos = "";
+      count++
+    }
+    count = 0;
+
+    while(count < 16) {
+      posi();
+      if(positions[count]==4) {
+        document.getElementById(pos)!.style.backgroundColor = "lightblue";
+      }
+      pos = "";
+      count++
+    }
+    count = 0;
+
+    while(count < 16) {
+      posi();
+      if(positions[count]==8) {
+        document.getElementById(pos)!.style.backgroundColor = "red";
+      }
+      pos = "";
+      count++
+    }
+    count = 0;
+
+    while(count < 16) {
+      posi();
+      if(positions[count]==16) {
+        document.getElementById(pos)!.style.backgroundColor = "orange";
+      }
+      pos = "";
+      count++
+    }
+    count = 0;
+
+    while(count < 16) {
+      posi();
+      if(positions[count]==32) {
+        document.getElementById(pos)!.style.backgroundColor = "purple";
+      }
+      pos = "";
+      count++
+    }
+    count = 0;
+
+    while(count < 16) {
+      posi();
+      if(positions[count]==64) {
+        document.getElementById(pos)!.style.backgroundColor = "pink";
+      }
+      pos = "";
+      count++
+    }
+    count = 0;
+
+    while(count < 16) {
+      posi();
+      if(positions[count]==128) {
+        document.getElementById(pos)!.style.backgroundColor = "brown";
+      }
+      pos = "";
+      count++
+    }
+    count = 0;
+
+    while(count < 16) {
+      posi();
+      if(positions[count]==256) {
+        document.getElementById(pos)!.style.backgroundColor = "magenta";
+      }
+      pos = "";
+      count++
+    }
+    count = 0;
+
+    while(count < 16) {
+      posi();
+      if(positions[count]==512) {
+        document.getElementById(pos)!.style.backgroundColor = "darkblue";
+      }
+      pos = "";
+      count++
+    }
+    count = 0;
+
+    while(count < 16) {
+      posi();
+      if(positions[count]==1024) {
+        document.getElementById(pos)!.style.backgroundColor = "yellow";
+      }
+      pos = "";
+      count++
+    }
+    count = 0;
+
+    while(count < 16) {
+      posi();
+      if(positions[count]==2048) {
+        document.getElementById(pos)!.style.backgroundColor = "green";
+      }
+      pos = "";
+      count++
+    }
+    count = 0;
+
+    while(count < 16) {
+      posi();
+      if(positions[count]==4096) {
+        document.getElementById(pos)!.style.backgroundColor = "darkgreen";
+      }
+      pos = "";
+      count++
+    }
+    count = 0;
+
+    while(count < 16) {
+      posi();
+      if(positions[count]==8192) {
+        document.getElementById(pos)!.style.backgroundColor = "lime";
+      }
+      pos = "";
+      count++
+    }
+    count = 0;
+
+    while(count < 16) {
+      posi();
+      if(positions[count]==16384) {
+        document.getElementById(pos)!.style.backgroundColor = "aquamarine";
+      }
+      pos = "";
+      count++
+    }
+    count = 0;
+
+    while(count < 16) {
+      posi();
+      if(positions[count]==32768) {
+        document.getElementById(pos)!.style.backgroundColor = "lightcoral";
+      }
+      pos = "";
+      count++
+    }
+    count = 0;
+
+    while(count < 16) {
+      posi();
+      if(positions[count]==65536) {
+        document.getElementById(pos)!.style.backgroundColor = "blueviolet";
+      }
+      pos = "";
+      count++
+    }
+    count = 0;
+
+    while(count < 16) {
+      posi();
+      if(positions[count]==131072) {
+        document.getElementById(pos)!.style.backgroundColor = "black";
+        document.getElementById(pos)!.innerHTML = "Hast du eigendlich Hobbys?"
+      }
+      pos = "";
+      count++
+    }
+    count = 0;
+
   }
 
 
   function moveleft() {
-    for (let index = 0; index < 16 && count < 2; index = index+4) {
-        
+    for (let index = 0; index < 16; index = index+4) {
+      console.log(index);
       if(positions[index+3] == 0) {
         positions[index+3] = positions[index+2];
         positions[index+2] = 0;
@@ -162,9 +523,263 @@ export const init: Init = () => {
         positions[index+3] = positions[index+2];
         positions[index+2] = 0;
       }
-      count = count+1;
-      window.alert("hi");
+
+      if(positions[index+3] == 0) {
+        positions[index+3] = positions[index+2];
+        positions[index+2] = 0;
+      }
+  
+      if(positions[index+2] == 0) {
+        positions[index+2] = positions[index+1];
+        positions[index+1] = 0;
+      }
+  
+      if(positions[index+1] == 0) {
+        positions[index+1] = positions[index+0];
+        positions[index+0] = 0;
+      }
+  
+      if(positions[index+2] == 0) {
+        positions[index+2] = positions[index+1];
+        positions[index+1] = 0;
+      }
+  
+      if(positions[index+1] == 0) {
+        positions[index+1] = positions[index+0];
+        positions[index+0] = 0;
+      }
+  
+      if(positions[index+3] == 0) {
+        positions[index+3] = positions[index+2];
+        positions[index+2] = 0;
+      }
+  
+      if(positions[index+3] == 0) {
+        positions[index+3] = positions[index+2];
+        positions[index+2] = 0;
+      }
     }
-  count = 0;
+  }
+
+  function moveright() {
+    for(let index = 0; index < 16; index = index+4) {
+      if(positions[index] == 0) {
+        positions[index] = positions[index+1];
+        positions[index+1] = 0;
+      }
+  
+      if(positions[index+1] == 0) {
+        positions[index+1] = positions[index+2];
+        positions[index+2] = 0;
+      }
+  
+      if(positions[index+2] == 0) {
+        positions[index+2] = positions[index+3];
+        positions[index+3] = 0;
+      }
+  
+      if(positions[index+3] == 0) {
+        positions[index+3] = positions[index+2];
+        positions[index+2] = 0;
+      }
+  
+      if(positions[index+2] == 0) {
+        positions[index+2] = positions[index+3];
+        positions[index+3] = 0;
+      }
+  
+      if(positions[index] == 0) {
+        positions[index] = positions[index+1];
+        positions[index+1] = 0;
+      }
+  
+      if(positions[index] == 0) {
+        positions[index] = positions[index+1];
+        positions[index+1] = 0;
+      }
+
+      if(positions[index] == 0) {
+        positions[index] = positions[index+1];
+        positions[index+1] = 0;
+      }
+  
+      if(positions[index+1] == 0) {
+        positions[index+1] = positions[index+2];
+        positions[index+2] = 0;
+      }
+  
+      if(positions[index+2] == 0) {
+        positions[index+2] = positions[index+3];
+        positions[index+3] = 0;
+      }
+  
+      if(positions[index+3] == 0) {
+        positions[index+3] = positions[index+2];
+        positions[index+2] = 0;
+      }
+  
+      if(positions[index+2] == 0) {
+        positions[index+2] = positions[index+3];
+        positions[index+3] = 0;
+      }
+  
+      if(positions[index+0] == 0) {
+        positions[index+0] = positions[index+1];
+        positions[index+1] = 0;
+      }
+  
+      if(positions[index+0] == 0) {
+        positions[index+0] = positions[index+1];
+        positions[index+1] = 0;
+      }
+    }
+  }
+
+  function moveup() {
+    for( let index = 0; index < 4; index++) {
+      if(positions[index] == 0) {
+        positions[index] = positions[index+4];
+        positions[index+4] = 0;
+      }
+
+      if(positions[index+4] == 0) {
+        positions[index+4] = positions[index+8];
+        positions[index+8] = 0;
+      }
+
+      if(positions[index+8] == 0) {
+        positions[index+8] = positions[index+12];
+        positions[index+12] = 0;
+      }
+
+      if(positions[index+4] == 0) {
+        positions[index+4] = positions[index+8];
+        positions[index+8] = 0;
+      }
+
+      if(positions[index+8] == 0) {
+        positions[index+8] = positions[index+12];
+        positions[index+12] = 0;
+      }
+
+      if(positions[index] == 0) {
+        positions[index] = positions[index+4];
+        positions[index+4] = 0;
+      }
+
+      if(positions[index] == 0) {
+        positions[index] = positions[index+4];
+        positions[index+4] = 0;
+      }
+
+      if(positions[index] == 0) {
+        positions[index] = positions[index+4];
+        positions[index+4] = 0;
+      }
+
+      if(positions[index+4] == 0) {
+        positions[index+4] = positions[index+8];
+        positions[index+8] = 0;
+      }
+
+      if(positions[index+8] == 0) {
+        positions[index+8] = positions[index+12];
+        positions[index+12] = 0;
+      }
+
+      if(positions[index+4] == 0) {
+        positions[index+4] = positions[index+8];
+        positions[index+8] = 0;
+      }
+
+      if(positions[index+8] == 0) {
+        positions[index+8] = positions[index+12];
+        positions[index+12] = 0;
+      }
+
+      if(positions[index] == 0) {
+        positions[index] = positions[index+4];
+        positions[index+4] = 0;
+      }
+
+      if(positions[index] == 0) {
+        positions[index] = positions[index+4];
+        positions[index+4] = 0;
+      }
+    }
+  }
+
+  function movedown() {
+    for(let index = 0; index < 4; index++) {
+      if(positions[index+12] == 0) {
+        positions[index+12] = positions[index+8];
+        positions[index+8] = 0;
+      }
+  
+      if(positions[index+8] == 0) {
+        positions[index+8] = positions[index+4];
+        positions[index+4] = 0;
+      }
+  
+      if(positions[index+4] == 0) {
+        positions[index+4] = positions[index];
+        positions[index] = 0;
+      }
+  
+      if(positions[index+8] == 0) {
+        positions[index+8] = positions[index+4];
+        positions[index+4] = 0;
+      }
+  
+      if(positions[index+4] == 0) {
+        positions[index+4] = positions[index];
+        positions[index] = 0;
+      }
+  
+      if(positions[index+12] == 0) {
+        positions[index+12] = positions[index+8];
+        positions[index+8] = 0;
+      }
+  
+      if(positions[index+12] == 0) {
+        positions[index+12] = positions[index+8];
+        positions[index+8] = 0;
+      }
+
+      if(positions[index+12] == 0) {
+        positions[index+12] = positions[index+8];
+        positions[index+8] = 0;
+      }
+  
+      if(positions[index+8] == 0) {
+        positions[index+8] = positions[index+4];
+        positions[index+4] = 0;
+      }
+  
+      if(positions[index+4] == 0) {
+        positions[index+4] = positions[index];
+        positions[index] = 0;
+      }
+  
+      if(positions[index+8] == 0) {
+        positions[index+8] = positions[index+4];
+        positions[index+4] = 0;
+      }
+  
+      if(positions[index+4] == 0) {
+        positions[index+4] = positions[index];
+        positions[index] = 0;
+      }
+  
+      if(positions[index+12] == 0) {
+        positions[index+12] = positions[index+8];
+        positions[index+8] = 0;
+      }
+  
+      if(positions[index+12] == 0) {
+        positions[index+12] = positions[index+8];
+        positions[index+8] = 0;
+      }
+    }
   }
 };
