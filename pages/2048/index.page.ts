@@ -17,7 +17,10 @@ export const serverHTML: ServerHTML = () => /*html*/ `
   <span id="box"><div class="square" id="i"></div><div class="square" id="j"></div><div class="square" id="k"></div><div class="square" id="l"></div></span>
   <span id="box"><div class="square" id="m"></div><div class="square" id="n"></div><div class="square" id="o"></div><div class="square" id="p"></div></span>
 
-  <button id="startbutton">start</button>
+  <button id="resetbutton">RESET</button>
+  <div id="end" align="center"></div>
+  <div id="text" align="center">Aktueller Score: <span id="score">0</span></div>
+  <div id="text" align="center">Highscore: <span id="highscore">0</span></div>
   `;
 
 export const serverMeta: ServerMeta = () => {
@@ -29,7 +32,7 @@ export const serverMeta: ServerMeta = () => {
 
 export const init: Init = () => {
 
-  const startButton = document.querySelector("#startbutton")
+  const resetButton = document.querySelector("#resetbutton");
 
   let positions = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 
@@ -37,38 +40,62 @@ export const init: Init = () => {
   let spawn:number = 0;
   let pos:string = "";
   let count:number = 0;
+  let losecount:number = 0;
+  let score:number = 0;
 
-  startButton!.addEventListener("click", () => {
-    createnewpiece()
+  document.getElementById("highscore")!.innerHTML = "0";
+  document.getElementById("highscore")!.innerHTML = localStorage.getItem("high")!.toString();
+
+  resetButton!.addEventListener("click", () => {
+    for(let index = 0; index < 16; index++) {
+      positions[index] = 0;
+    }
+    read();
+    document.getElementById("end")!.innerHTML = "";
+    document.getElementById("score")!.innerHTML = "0";
   })
 
   function createnewpiece() {
-     if(Math.random() > 0.9) {
-      newpiece = 4;
-     }else{
-      newpiece = 2;
-     }
+      if (positions[0] == 0 ||positions[1] == 0 ||positions[2] == 0 ||positions[3] == 0 ||positions[4] == 0 ||positions[5] == 0 ||positions[6] == 0 ||positions[7] == 0 ||positions[8] == 0 ||positions[9] == 0 ||positions[10] == 0 ||positions[11] == 0 ||positions[12] == 0 ||positions[13] == 0 ||positions[14] == 0 ||positions[15] == 0) {
+        if(Math.random() > 0.9) {
+          newpiece = 4;
+        }else{
+          newpiece = 2;
+        }
   
-     while(positions[spawn] != 0) {
-      spawn = Math.floor(Math.random() * 16);
+        while(positions[spawn] != 0) {
+          spawn = Math.floor(Math.random() * 16);
 
-      if (spawn == 16) {
-        spawn = spawn-1;
+          if (spawn == 16) {
+            spawn = spawn-1;
+          }
+        }
+        positions[spawn] = newpiece;
       }
+      if (positions.length > 16){
+        positions.pop();
+      }
+      
+      spawn = 16;
 
-     }
+      read();
+      points();
+      lose();
 
-     positions[spawn] = newpiece;
+  }
 
-     read();
-
+  function points() {
+    score = 0;
+    for(let index = 0; index < 16; index++) {
+      score = score + positions[index];
+    }
+    document.getElementById("score")!.innerHTML = score.toString();
   }
   
                         
   window.addEventListener("keydown", (e) => {
 
     if(e.key === "ArrowLeft") {
-      console.log("left")
       moveleft();
       //Combine
 
@@ -172,6 +199,40 @@ export const init: Init = () => {
     }
 
   });
+
+  function lose() {
+    for (let index = 0; index < 16; index++) {
+      if(index == 3 || index == 7 || index == 11) {
+        if(positions[index] != positions[index-1] &&positions[index] != positions[index-4] &&positions[index] != positions[index+4] ) {
+          if (positions[0] != 0 &&positions[1] != 0 &&positions[2] != 0 &&positions[3] != 0 &&positions[4] != 0 &&positions[5] != 0 &&positions[6] != 0 &&positions[7] != 0 &&positions[8] != 0 &&positions[9] != 0 &&positions[10] != 0 &&positions[11] != 0 &&positions[12] != 0 &&positions[13] != 0 &&positions[14] != 0 &&positions[15] != 0) {
+            losecount++;
+          }
+        }
+      }else if(index == 4 || index == 8 || index == 12) {
+        if(positions[index] != positions[index-4] &&positions[index] != positions[index+1] &&positions[index] != positions[index+4] ) {
+          if (positions[0] != 0 &&positions[1] != 0 &&positions[2] != 0 &&positions[3] != 0 &&positions[4] != 0 &&positions[5] != 0 &&positions[6] != 0 &&positions[7] != 0 &&positions[8] != 0 &&positions[9] != 0 &&positions[10] != 0 &&positions[11] != 0 &&positions[12] != 0 &&positions[13] != 0 &&positions[14] != 0 &&positions[15] != 0) {
+            losecount++;
+          }
+        }
+      }else{
+        if(positions[index] != positions[index-1] &&positions[index] != positions[index-4] &&positions[index] != positions[index+1] &&positions[index] != positions[index+4] ) {
+          if (positions[0] != 0 &&positions[1] != 0 &&positions[2] != 0 &&positions[3] != 0 &&positions[4] != 0 &&positions[5] != 0 &&positions[6] != 0 &&positions[7] != 0 &&positions[8] != 0 &&positions[9] != 0 &&positions[10] != 0 &&positions[11] != 0 &&positions[12] != 0 &&positions[13] != 0 &&positions[14] != 0 &&positions[15] != 0) {
+            losecount++;
+          }
+        }
+      }
+    }
+    console.log(losecount)
+    console.log(positions)
+    if(losecount == 16) {
+      document.getElementById("end")!.innerHTML = "GAME OVER"
+      if (score > Number(localStorage.getItem("high"))) {
+        localStorage.setItem("high",score.toString());
+        document.getElementById("highscore")!.innerHTML = localStorage.getItem("high")!.toString();
+      }
+    }
+    losecount = 0;
+  }
 
   function posi() {
     switch (count) {
@@ -488,7 +549,6 @@ export const init: Init = () => {
 
   function moveleft() {
     for (let index = 0; index < 16; index = index+4) {
-      console.log(index);
       if(positions[index+3] == 0) {
         positions[index+3] = positions[index+2];
         positions[index+2] = 0;
