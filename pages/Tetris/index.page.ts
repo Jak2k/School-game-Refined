@@ -152,7 +152,43 @@ export const init: Init = () => {
   });
 };
 
-function deleteLine() {}
+function deleteLine(line: number) {
+  
+  for (let i = filledsquares.length - 1; i >= 0; i--) {
+    for (let j = filledsquares[i][0].length - 1; j >= 0; j--) {
+      if (line === 0) {
+        if (filledsquares[i][0][j] < 10) {
+          filledsquares[i][0].splice(j, 1);
+        }
+      } else {
+        if (
+          filledsquares[i][0][j] < (line + 1) * 10 &&
+          filledsquares[i][0][j] >= line * 10
+        ) {
+          filledsquares[i][0].splice(j, 1);
+        }
+      }
+      
+      
+
+    }
+  }
+  movedownremainingblocks(line);
+  undraw();
+  displayShape();
+}
+
+function movedownremainingblocks(line: number) {
+  let tempfilledsquares = filledsquares;
+  for (let i = filledsquares.length - 1; i >= 0; i--) {
+    tempfilledsquares[i][0].sort();
+    for (let j = tempfilledsquares[i][0].length - 1; j >= 0; j--) {
+      if (filledsquares[i][0][j] < line * 10) {
+        filledsquares[i][0][j] += 10;
+      }
+    }
+  }
+}
 
 function checkLines() {
   let tempfilledsquares: number[][] = [
@@ -182,25 +218,19 @@ function checkLines() {
       if (index < 10) {
         tempfilledsquares[0].push(index);
       } else {
-        tempfilledsquares[Math.floor(index / 10 - 1)].push(index);
+        tempfilledsquares[Math.floor(index / 10)].push(index);
       }
     });
-  });
-  tempfilledsquares.sort();
-
-  let end = false;
-
-  for (let i = tempfilledsquares.length - 1; i >= 0; i--) {
-    if (tempfilledsquares[i].length === 10) {
+    for (let i = 0; i < tempfilledsquares.length; i++) {
+      tempfilledsquares[i].sort();
     }
-  }
-
-  for (let i = Tetrominoelines.length - 1; i >= 0; i--) {
-    for (let n = Tetrominoelines[i].length - 1; n >= 0; n--) {
-      if (!tempfilledsquares[i].includes(Tetrominoelines[i][n])) {
+    for (let i = Tetrominoelines.length - 1; i >= 0; i--) {
+      if (tempfilledsquares[i].length == Tetrominoelines[i].length) {
+        console.log("delete line")
+        deleteLine(i);
       }
     }
-  }
+  });
 }
 
 function newTetrominoe() {
@@ -279,6 +309,7 @@ function moveRight() {
 }
 
 function moveDown() {
+  checkLines();
   let end = false;
   for (
     let i = 0;
@@ -326,7 +357,7 @@ function rotatetetrominoe() {
     i++
   ) {
     if (
-      theTetrominoes[currentTetrominoe][temprotation][i] + currentrotation >=
+      theTetrominoes[currentTetrominoe][temprotation][i] + currentPosition >=
       190
     ) {
       end = true;
@@ -343,6 +374,23 @@ function rotatetetrominoe() {
           ) {
             end = true;
           }
+          if (currentblock + currentPosition >= 190) {
+            end = true;
+          }
+          if (
+            (currentblock + currentPosition) % 10 === 0 &&
+            (newblock + currentPosition) % 10 === 9
+          ) {
+            end = true;
+          }
+
+          filledsquares.forEach((filledsquare) => {
+            filledsquare[0].forEach((filledindex: number) => {
+              if (filledindex === newblock + currentPosition) {
+                end = true;
+              }
+            });
+          });
         }
       );
     }
@@ -350,9 +398,9 @@ function rotatetetrominoe() {
 
   if (
     theTetrominoes[currentTetrominoe] === theTetrominoes[4] &&
-    currentPosition % 10 >= 7 
+    currentPosition % 10 >= 7
   ) {
-    if(currentrotation === 0 || currentrotation === 2){
+    if (currentrotation === 0 || currentrotation === 2) {
       end = true;
     }
   }
