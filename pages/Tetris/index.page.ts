@@ -28,11 +28,23 @@ const theTetrominoes = [
   ],
   // lTetromino
   [
+    [1, 11, 21, 20],
+    [0, 10, 11, 12], //90° right
+    [0, 1, 10, 20], //180° right
+    [0, 1, 2, 12], //270° right
+  ], // inverted lTetromino
+  [
     [0, 1, 11, 12],
     [1, 11, 10, 20],
     [0, 1, 11, 12],
     [1, 11, 10, 20],
   ], // zTetromino
+  [
+    [1, 2, 10, 11],
+    [0, 10, 11, 21],
+    [1, 2, 10, 11],
+    [0, 10, 11, 21],
+  ], //inverted zTetromino
   [
     [0, 1, 2, 11],
     [1, 10, 11, 21],
@@ -81,13 +93,6 @@ const colors = ["orange", "red", "purple", "green", "blue", "yellow", "cyan"];
 function createGrid() {
   let grid = "";
   for (let i = 0; i < 200; i++) {
-    /* const div = document.createElement("div");
-    div.classList.add("grid-item");
-    div.id = i.toString();
-    div.style.backgroundColor = "black";
-    div.style.borderBlockColor = "white";
-    squares.push(div);
-    grid.appendChild(div); */
     grid += `<div class="grid-item" style="background-color: black; border-color: white"
      id="${i.toString()}"></div>`;
   }
@@ -153,24 +158,12 @@ export const init: Init = () => {
 };
 
 function deleteLine(line: number) {
-  
   for (let i = filledsquares.length - 1; i >= 0; i--) {
-    for (let j = filledsquares[i][0].length - 1; j >= 0; j--) {
-      if (line === 0) {
-        if (filledsquares[i][0][j] < 10) {
-          filledsquares[i][0].splice(j, 1);
-        }
-      } else {
-        if (
-          filledsquares[i][0][j] < (line + 1) * 10 &&
-          filledsquares[i][0][j] >= line * 10
-        ) {
-          filledsquares[i][0].splice(j, 1);
-        }
-      }
-      
-      
-
+    if (
+      filledsquares[i][0] < (line + 1) * 10 &&
+      filledsquares[i][0] >= line * 10
+    ) {
+      filledsquares.splice(i, 1);
     }
   }
   movedownremainingblocks(line);
@@ -179,12 +172,10 @@ function deleteLine(line: number) {
 }
 
 function movedownremainingblocks(line: number) {
-  let tempfilledsquares = filledsquares;
-  for (let i = filledsquares.length - 1; i >= 0; i--) {
-    tempfilledsquares[i][0].sort();
-    for (let j = tempfilledsquares[i][0].length - 1; j >= 0; j--) {
-      if (filledsquares[i][0][j] < line * 10) {
-        filledsquares[i][0][j] += 10;
+  for (let i = line; i >= 0; i--) {
+    for (let j = filledsquares.length - 1; j >= 0; j--) {
+      if (Tetrominoelines[i].includes(filledsquares[j][0])) {
+        filledsquares[j][0] += 10;
       }
     }
   }
@@ -213,24 +204,22 @@ function checkLines() {
     [],
     [],
   ];
-  filledsquares.forEach((forms) => {
-    forms[0].forEach((index: number) => {
-      if (index < 10) {
-        tempfilledsquares[0].push(index);
-      } else {
-        tempfilledsquares[Math.floor(index / 10)].push(index);
-      }
-    });
-    for (let i = 0; i < tempfilledsquares.length; i++) {
-      tempfilledsquares[i].sort();
-    }
-    for (let i = Tetrominoelines.length - 1; i >= 0; i--) {
-      if (tempfilledsquares[i].length == Tetrominoelines[i].length) {
-        console.log("delete line")
-        deleteLine(i);
-      }
+  filledsquares.forEach((block: any) => {
+    if (block[0] < 10) {
+      tempfilledsquares[0].push(block[0]);
+    } else {
+      tempfilledsquares[Math.floor(block[0] / 10)].push(block[0]);
     }
   });
+  for (let i = 0; i < tempfilledsquares.length; i++) {
+    tempfilledsquares[i].sort();
+  }
+  for (let i = Tetrominoelines.length - 1; i >= 0; i--) {
+    if (tempfilledsquares[i].length == Tetrominoelines[i].length) {
+      deleteLine(i);
+      return;
+    }
+  }
 }
 
 function newTetrominoe() {
@@ -241,15 +230,15 @@ function newTetrominoe() {
 function saveTetrominoe() {
   let temparray: number[] = [];
   theTetrominoes[currentTetrominoe][currentrotation].forEach((index: any) => {
-    temparray.push(index + currentPosition);
+    filledsquares.push([index + currentPosition, colors[currentColor]]);
   });
-  filledsquares.push([temparray, colors[currentColor]]);
-  temparray = [];
   currentrotation = 0;
   currentPosition = 0;
   newTetrominoe();
   displayShape();
-  checkLines();
+  for (let i = 4; i > 0; i--) {
+    checkLines();
+  }
 }
 
 function moveLeft() {
@@ -263,11 +252,9 @@ function moveLeft() {
     }
 
     filledsquares.forEach((filledsquare) => {
-      filledsquare[0].forEach((filledindex: number) => {
-        if (filledindex === index - 1) {
-          end = true;
-        }
-      });
+      if (filledsquare[0] === index - 1) {
+        end = true;
+      }
     });
   }
   if (end) {
@@ -291,12 +278,10 @@ function moveRight() {
     if ((index + 1) % 10 === 0) {
       end = true;
     }
-    filledsquares.forEach((filledsquare) => {
-      filledsquare[0].forEach((filledindex: number) => {
-        if (filledindex === index + 1) {
-          end = true;
-        }
-      });
+    filledsquares.forEach((filledsquare: any) => {
+      if (filledsquare[0] === index + 1) {
+        end = true;
+      }
     });
   }
   if (end) {
@@ -309,7 +294,10 @@ function moveRight() {
 }
 
 function moveDown() {
-  checkLines();
+  for (let i = 0; i < 4; i++) {
+    checkLines();
+  }
+
   let end = false;
   for (
     let i = 0;
@@ -322,16 +310,14 @@ function moveDown() {
       end = true;
     }
     filledsquares.forEach((filledsquare) => {
-      filledsquare[0].forEach((filledindex: number) => {
-        if (
-          filledindex ===
-          currentPosition +
-            theTetrominoes[currentTetrominoe][currentrotation][i] +
-            10
-        ) {
-          end = true;
-        }
-      });
+      if (
+        filledsquare[0] ===
+        currentPosition +
+          theTetrominoes[currentTetrominoe][currentrotation][i] +
+          10
+      ) {
+        end = true;
+      }
     });
   }
   if (end) {
@@ -385,11 +371,9 @@ function rotatetetrominoe() {
           }
 
           filledsquares.forEach((filledsquare) => {
-            filledsquare[0].forEach((filledindex: number) => {
-              if (filledindex === newblock + currentPosition) {
-                end = true;
-              }
-            });
+            if (filledsquare[0] === newblock + currentPosition) {
+              end = true;
+            }
           });
         }
       );
@@ -425,9 +409,7 @@ function displayShape() {
     }
   );
   for (let i = 0; i < filledsquares.length; i++) {
-    filledsquares[i][0].forEach((index: number) => {
-      squares[index].style.backgroundColor = filledsquares[i][1];
-    });
+    squares[filledsquares[i][0]].style.backgroundColor = filledsquares[i][1];
   }
 }
 
