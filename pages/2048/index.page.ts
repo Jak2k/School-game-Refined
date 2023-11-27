@@ -4,9 +4,9 @@ import { type ServerHTML, ServerMeta, Init } from "../../renderer/types";
 
 if (typeof document === "undefined") {
   // @ts-ignore
-    globalThis.document = {
-      querySelector: () => {},
-    };
+  globalThis.document = {
+    querySelector: () => {},
+  };
 }
 
 export const serverHTML: ServerHTML = () => /*html*/ `
@@ -31,204 +31,276 @@ export const serverMeta: ServerMeta = () => {
 };
 
 export const init: Init = () => {
-
   const resetButton = document.querySelector("#resetbutton");
 
-  let positions = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+  let positions = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-  let newpiece:number = 0;
-  let spawn:number = 0;
-  let pos:string = "";
-  let count:number = 0;
-  let losecount:number = 0;
-  let score:number = 0;
+  let newpiece: number = 0;
+  let spawn: number = 0;
+  let pos: string = "";
+  let count: number = 0;
+  let losecount: number = 0;
+  let score: number = 0;
 
   document.getElementById("highscore")!.innerHTML = "0";
-  document.getElementById("highscore")!.innerHTML = localStorage.getItem("high")!.toString();
+  if (localStorage.getItem("high") == null) {
+    localStorage.setItem("high", "0");
+  }
+  document.getElementById("highscore")!.innerHTML = localStorage
+    .getItem("high")!
+    .toString();
 
   resetButton!.addEventListener("click", () => {
-    for(let index = 0; index < 16; index++) {
+    for (let index = 0; index < 16; index++) {
       positions[index] = 0;
     }
     read();
     document.getElementById("end")!.innerHTML = "";
     document.getElementById("score")!.innerHTML = "0";
-  })
+  });
 
   function createnewpiece() {
-      if (positions[0] == 0 ||positions[1] == 0 ||positions[2] == 0 ||positions[3] == 0 ||positions[4] == 0 ||positions[5] == 0 ||positions[6] == 0 ||positions[7] == 0 ||positions[8] == 0 ||positions[9] == 0 ||positions[10] == 0 ||positions[11] == 0 ||positions[12] == 0 ||positions[13] == 0 ||positions[14] == 0 ||positions[15] == 0) {
-        if(Math.random() > 0.9) {
-          newpiece = 4;
-        }else{
-          newpiece = 2;
-        }
-  
-        while(positions[spawn] != 0) {
-          spawn = Math.floor(Math.random() * 16);
-
-          if (spawn == 16) {
-            spawn = spawn-1;
-          }
-        }
-        positions[spawn] = newpiece;
+    if (
+      positions[0] == 0 ||
+      positions[1] == 0 ||
+      positions[2] == 0 ||
+      positions[3] == 0 ||
+      positions[4] == 0 ||
+      positions[5] == 0 ||
+      positions[6] == 0 ||
+      positions[7] == 0 ||
+      positions[8] == 0 ||
+      positions[9] == 0 ||
+      positions[10] == 0 ||
+      positions[11] == 0 ||
+      positions[12] == 0 ||
+      positions[13] == 0 ||
+      positions[14] == 0 ||
+      positions[15] == 0
+    ) {
+      if (Math.random() > 0.9) {
+        newpiece = 4;
+      } else {
+        newpiece = 2;
       }
-      if (positions.length > 16){
-        positions.pop();
+
+      while (positions[spawn] != 0) {
+        spawn = Math.floor(Math.random() * 16);
+
+        if (spawn == 16) {
+          spawn = spawn - 1;
+        }
       }
-      
-      spawn = 16;
+      positions[spawn] = newpiece;
+    }
+    if (positions.length > 16) {
+      positions.pop();
+    }
 
-      read();
-      points();
-      lose();
+    spawn = 16;
 
+    read();
+    points();
+    lose();
   }
 
   function points() {
     score = 0;
-    for(let index = 0; index < 16; index++) {
+    for (let index = 0; index < 16; index++) {
       score = score + positions[index];
     }
     document.getElementById("score")!.innerHTML = score.toString();
   }
-  
-                        
+
   window.addEventListener("keydown", (e) => {
-
-    if(e.key === "ArrowLeft") {
+    if (e.key === "ArrowLeft") {
       moveleft();
       //Combine
 
-      for (let index = 0; index < 16; index = index+4) {
-
-        if(positions[index] == positions[index+1]) {
-          positions[index] = positions[index]*2;
-          positions[index+1] = 0;
+      for (let index = 0; index < 16; index = index + 4) {
+        if (positions[index] == positions[index + 1]) {
+          positions[index] = positions[index] * 2;
+          positions[index + 1] = 0;
         }
 
-        if(positions[index+1] == positions[index+2]) {
-          positions[index+1] = positions[index+1]*2;
-          positions[index+2] = 0;
+        if (positions[index + 1] == positions[index + 2]) {
+          positions[index + 1] = positions[index + 1] * 2;
+          positions[index + 2] = 0;
         }
 
-        if(positions[index+2] == positions[index+3]) {
-          positions[index+2] = positions[index+2]*2;
-          positions[index+3] = 0;
+        if (positions[index + 2] == positions[index + 3]) {
+          positions[index + 2] = positions[index + 2] * 2;
+          positions[index + 3] = 0;
         }
       }
       moveleft();
       createnewpiece();
-
-    }else if(e.key === "ArrowRight") {
-
+    } else if (e.key === "ArrowRight") {
       moveright();
 
       //Combine
-      for (let index = 0; index < 16; index = index+4) {
-
-        if(positions[index+3] == positions[index+2]) {
-          positions[index+3] = positions[index+3]*2;
-          positions[index+2] = 0;
+      for (let index = 0; index < 16; index = index + 4) {
+        if (positions[index + 3] == positions[index + 2]) {
+          positions[index + 3] = positions[index + 3] * 2;
+          positions[index + 2] = 0;
         }
 
-        if(positions[index+2] == positions[index+1]) {
-          positions[index+2] = positions[index+2]*2;
-          positions[index+1] = 0;
+        if (positions[index + 2] == positions[index + 1]) {
+          positions[index + 2] = positions[index + 2] * 2;
+          positions[index + 1] = 0;
         }
 
-        if(positions[index+1] == positions[index+0]) {
-          positions[index+1] = positions[index+1]*2;
-          positions[index+0] = 0;
+        if (positions[index + 1] == positions[index + 0]) {
+          positions[index + 1] = positions[index + 1] * 2;
+          positions[index + 0] = 0;
         }
       }
       moveright();
       createnewpiece();
-
-    }else if(e.key === "ArrowUp") {
-
+    } else if (e.key === "ArrowUp") {
       moveup();
 
       //Combine
       for (let index = 0; index < 4; index++) {
-
-        if(positions[index] == positions[index+4]) {
-          positions[index] = positions[index]*2;
-          positions[index+4] = 0;
+        if (positions[index] == positions[index + 4]) {
+          positions[index] = positions[index] * 2;
+          positions[index + 4] = 0;
         }
 
-        if(positions[index+4] == positions[index+8]) {
-          positions[index+4] = positions[index+4]*2;
-          positions[index+8] = 0;
+        if (positions[index + 4] == positions[index + 8]) {
+          positions[index + 4] = positions[index + 4] * 2;
+          positions[index + 8] = 0;
         }
 
-        if(positions[index+8] == positions[index+12]) {
-          positions[index+8] = positions[index+8]*2;
-          positions[index+12] = 0;
+        if (positions[index + 8] == positions[index + 12]) {
+          positions[index + 8] = positions[index + 8] * 2;
+          positions[index + 12] = 0;
         }
       }
 
       moveup();
       createnewpiece();
-
-    }else if(e.key === "ArrowDown") {
-
+    } else if (e.key === "ArrowDown") {
       movedown();
 
       //Combine
       for (let index = 0; index < 4; index++) {
-
-        if(positions[index+12] == positions[index+8]) {
-          positions[index+12] = positions[index+12]*2;
-          positions[index+8] = 0;
+        if (positions[index + 12] == positions[index + 8]) {
+          positions[index + 12] = positions[index + 12] * 2;
+          positions[index + 8] = 0;
         }
 
-        if(positions[index+8] == positions[index+4]) {
-          positions[index+8] = positions[index+8]*2;
-          positions[index+4] = 0;
+        if (positions[index + 8] == positions[index + 4]) {
+          positions[index + 8] = positions[index + 8] * 2;
+          positions[index + 4] = 0;
         }
 
-        if(positions[index+4] == positions[index]) {
-          positions[index+4] = positions[index+4]*2;
+        if (positions[index + 4] == positions[index]) {
+          positions[index + 4] = positions[index + 4] * 2;
           positions[index] = 0;
         }
       }
 
       movedown();
       createnewpiece();
-    
     }
-
   });
 
   function lose() {
     for (let index = 0; index < 16; index++) {
-      if(index == 3 || index == 7 || index == 11) {
-        if(positions[index] != positions[index-1] &&positions[index] != positions[index-4] &&positions[index] != positions[index+4] ) {
-          if (positions[0] != 0 &&positions[1] != 0 &&positions[2] != 0 &&positions[3] != 0 &&positions[4] != 0 &&positions[5] != 0 &&positions[6] != 0 &&positions[7] != 0 &&positions[8] != 0 &&positions[9] != 0 &&positions[10] != 0 &&positions[11] != 0 &&positions[12] != 0 &&positions[13] != 0 &&positions[14] != 0 &&positions[15] != 0) {
+      if (index == 3 || index == 7 || index == 11) {
+        if (
+          positions[index] != positions[index - 1] &&
+          positions[index] != positions[index - 4] &&
+          positions[index] != positions[index + 4]
+        ) {
+          if (
+            positions[0] != 0 &&
+            positions[1] != 0 &&
+            positions[2] != 0 &&
+            positions[3] != 0 &&
+            positions[4] != 0 &&
+            positions[5] != 0 &&
+            positions[6] != 0 &&
+            positions[7] != 0 &&
+            positions[8] != 0 &&
+            positions[9] != 0 &&
+            positions[10] != 0 &&
+            positions[11] != 0 &&
+            positions[12] != 0 &&
+            positions[13] != 0 &&
+            positions[14] != 0 &&
+            positions[15] != 0
+          ) {
             losecount++;
           }
         }
-      }else if(index == 4 || index == 8 || index == 12) {
-        if(positions[index] != positions[index-4] &&positions[index] != positions[index+1] &&positions[index] != positions[index+4] ) {
-          if (positions[0] != 0 &&positions[1] != 0 &&positions[2] != 0 &&positions[3] != 0 &&positions[4] != 0 &&positions[5] != 0 &&positions[6] != 0 &&positions[7] != 0 &&positions[8] != 0 &&positions[9] != 0 &&positions[10] != 0 &&positions[11] != 0 &&positions[12] != 0 &&positions[13] != 0 &&positions[14] != 0 &&positions[15] != 0) {
+      } else if (index == 4 || index == 8 || index == 12) {
+        if (
+          positions[index] != positions[index - 4] &&
+          positions[index] != positions[index + 1] &&
+          positions[index] != positions[index + 4]
+        ) {
+          if (
+            positions[0] != 0 &&
+            positions[1] != 0 &&
+            positions[2] != 0 &&
+            positions[3] != 0 &&
+            positions[4] != 0 &&
+            positions[5] != 0 &&
+            positions[6] != 0 &&
+            positions[7] != 0 &&
+            positions[8] != 0 &&
+            positions[9] != 0 &&
+            positions[10] != 0 &&
+            positions[11] != 0 &&
+            positions[12] != 0 &&
+            positions[13] != 0 &&
+            positions[14] != 0 &&
+            positions[15] != 0
+          ) {
             losecount++;
           }
         }
-      }else{
-        if(positions[index] != positions[index-1] &&positions[index] != positions[index-4] &&positions[index] != positions[index+1] &&positions[index] != positions[index+4] ) {
-          if (positions[0] != 0 &&positions[1] != 0 &&positions[2] != 0 &&positions[3] != 0 &&positions[4] != 0 &&positions[5] != 0 &&positions[6] != 0 &&positions[7] != 0 &&positions[8] != 0 &&positions[9] != 0 &&positions[10] != 0 &&positions[11] != 0 &&positions[12] != 0 &&positions[13] != 0 &&positions[14] != 0 &&positions[15] != 0) {
+      } else {
+        if (
+          positions[index] != positions[index - 1] &&
+          positions[index] != positions[index - 4] &&
+          positions[index] != positions[index + 1] &&
+          positions[index] != positions[index + 4]
+        ) {
+          if (
+            positions[0] != 0 &&
+            positions[1] != 0 &&
+            positions[2] != 0 &&
+            positions[3] != 0 &&
+            positions[4] != 0 &&
+            positions[5] != 0 &&
+            positions[6] != 0 &&
+            positions[7] != 0 &&
+            positions[8] != 0 &&
+            positions[9] != 0 &&
+            positions[10] != 0 &&
+            positions[11] != 0 &&
+            positions[12] != 0 &&
+            positions[13] != 0 &&
+            positions[14] != 0 &&
+            positions[15] != 0
+          ) {
             losecount++;
           }
         }
       }
     }
-    console.log(losecount)
-    console.log(positions)
-    if(losecount == 16) {
-      document.getElementById("end")!.innerHTML = "GAME OVER"
+    console.log(losecount);
+    console.log(positions);
+    if (losecount == 16) {
+      document.getElementById("end")!.innerHTML = "GAME OVER";
       if (score > Number(localStorage.getItem("high"))) {
-        localStorage.setItem("high",score.toString());
-        document.getElementById("highscore")!.innerHTML = localStorage.getItem("high")!.toString();
+        localStorage.setItem("high", score.toString());
+        document.getElementById("highscore")!.innerHTML = localStorage
+          .getItem("high")!
+          .toString();
       }
     }
     losecount = 0;
@@ -286,8 +358,6 @@ export const init: Init = () => {
         break;
     }
   }
-
-
 
   function read() {
     document.getElementById("a")!.innerHTML = positions[0].toString();
@@ -371,474 +441,472 @@ export const init: Init = () => {
       document.getElementById("p")!.innerHTML = "";
       document.getElementById("p")!.style.backgroundColor = "darkgrey";
     }
-    
+
     //Color
-    while(count < 16) {
+    while (count < 16) {
       posi();
-      if(positions[count]==2) {
+      if (positions[count] == 2) {
         document.getElementById(pos)!.style.backgroundColor = "blue";
       }
       pos = "";
-      count++
+      count++;
     }
     count = 0;
 
-    while(count < 16) {
+    while (count < 16) {
       posi();
-      if(positions[count]==4) {
+      if (positions[count] == 4) {
         document.getElementById(pos)!.style.backgroundColor = "lightblue";
       }
       pos = "";
-      count++
+      count++;
     }
     count = 0;
 
-    while(count < 16) {
+    while (count < 16) {
       posi();
-      if(positions[count]==8) {
+      if (positions[count] == 8) {
         document.getElementById(pos)!.style.backgroundColor = "red";
       }
       pos = "";
-      count++
+      count++;
     }
     count = 0;
 
-    while(count < 16) {
+    while (count < 16) {
       posi();
-      if(positions[count]==16) {
+      if (positions[count] == 16) {
         document.getElementById(pos)!.style.backgroundColor = "orange";
       }
       pos = "";
-      count++
+      count++;
     }
     count = 0;
 
-    while(count < 16) {
+    while (count < 16) {
       posi();
-      if(positions[count]==32) {
+      if (positions[count] == 32) {
         document.getElementById(pos)!.style.backgroundColor = "purple";
       }
       pos = "";
-      count++
+      count++;
     }
     count = 0;
 
-    while(count < 16) {
+    while (count < 16) {
       posi();
-      if(positions[count]==64) {
+      if (positions[count] == 64) {
         document.getElementById(pos)!.style.backgroundColor = "pink";
       }
       pos = "";
-      count++
+      count++;
     }
     count = 0;
 
-    while(count < 16) {
+    while (count < 16) {
       posi();
-      if(positions[count]==128) {
+      if (positions[count] == 128) {
         document.getElementById(pos)!.style.backgroundColor = "brown";
       }
       pos = "";
-      count++
+      count++;
     }
     count = 0;
 
-    while(count < 16) {
+    while (count < 16) {
       posi();
-      if(positions[count]==256) {
+      if (positions[count] == 256) {
         document.getElementById(pos)!.style.backgroundColor = "magenta";
       }
       pos = "";
-      count++
+      count++;
     }
     count = 0;
 
-    while(count < 16) {
+    while (count < 16) {
       posi();
-      if(positions[count]==512) {
+      if (positions[count] == 512) {
         document.getElementById(pos)!.style.backgroundColor = "darkblue";
       }
       pos = "";
-      count++
+      count++;
     }
     count = 0;
 
-    while(count < 16) {
+    while (count < 16) {
       posi();
-      if(positions[count]==1024) {
+      if (positions[count] == 1024) {
         document.getElementById(pos)!.style.backgroundColor = "yellow";
       }
       pos = "";
-      count++
+      count++;
     }
     count = 0;
 
-    while(count < 16) {
+    while (count < 16) {
       posi();
-      if(positions[count]==2048) {
+      if (positions[count] == 2048) {
         document.getElementById(pos)!.style.backgroundColor = "green";
       }
       pos = "";
-      count++
+      count++;
     }
     count = 0;
 
-    while(count < 16) {
+    while (count < 16) {
       posi();
-      if(positions[count]==4096) {
+      if (positions[count] == 4096) {
         document.getElementById(pos)!.style.backgroundColor = "darkgreen";
       }
       pos = "";
-      count++
+      count++;
     }
     count = 0;
 
-    while(count < 16) {
+    while (count < 16) {
       posi();
-      if(positions[count]==8192) {
+      if (positions[count] == 8192) {
         document.getElementById(pos)!.style.backgroundColor = "lime";
       }
       pos = "";
-      count++
+      count++;
     }
     count = 0;
 
-    while(count < 16) {
+    while (count < 16) {
       posi();
-      if(positions[count]==16384) {
+      if (positions[count] == 16384) {
         document.getElementById(pos)!.style.backgroundColor = "aquamarine";
       }
       pos = "";
-      count++
+      count++;
     }
     count = 0;
 
-    while(count < 16) {
+    while (count < 16) {
       posi();
-      if(positions[count]==32768) {
+      if (positions[count] == 32768) {
         document.getElementById(pos)!.style.backgroundColor = "lightcoral";
       }
       pos = "";
-      count++
+      count++;
     }
     count = 0;
 
-    while(count < 16) {
+    while (count < 16) {
       posi();
-      if(positions[count]==65536) {
+      if (positions[count] == 65536) {
         document.getElementById(pos)!.style.backgroundColor = "blueviolet";
       }
       pos = "";
-      count++
+      count++;
     }
     count = 0;
 
-    while(count < 16) {
+    while (count < 16) {
       posi();
-      if(positions[count]==131072) {
+      if (positions[count] == 131072) {
         document.getElementById(pos)!.style.backgroundColor = "black";
-        document.getElementById(pos)!.innerHTML = "Hast du eigendlich Hobbys?"
+        document.getElementById(pos)!.innerHTML = "Hast du eigendlich Hobbys?";
       }
       pos = "";
-      count++
+      count++;
     }
     count = 0;
-
   }
 
-
   function moveleft() {
-    for (let index = 0; index < 16; index = index+4) {
-      if(positions[index+3] == 0) {
-        positions[index+3] = positions[index+2];
-        positions[index+2] = 0;
-      }
-  
-      if(positions[index+2] == 0) {
-        positions[index+2] = positions[index+1];
-        positions[index+1] = 0;
-      }
-  
-      if(positions[index+1] == 0) {
-        positions[index+1] = positions[index+0];
-        positions[index+0] = 0;
-      }
-  
-      if(positions[index+2] == 0) {
-        positions[index+2] = positions[index+1];
-        positions[index+1] = 0;
-      }
-  
-      if(positions[index+1] == 0) {
-        positions[index+1] = positions[index+0];
-        positions[index+0] = 0;
-      }
-  
-      if(positions[index+3] == 0) {
-        positions[index+3] = positions[index+2];
-        positions[index+2] = 0;
-      }
-  
-      if(positions[index+3] == 0) {
-        positions[index+3] = positions[index+2];
-        positions[index+2] = 0;
+    for (let index = 0; index < 16; index = index + 4) {
+      if (positions[index + 3] == 0) {
+        positions[index + 3] = positions[index + 2];
+        positions[index + 2] = 0;
       }
 
-      if(positions[index+3] == 0) {
-        positions[index+3] = positions[index+2];
-        positions[index+2] = 0;
+      if (positions[index + 2] == 0) {
+        positions[index + 2] = positions[index + 1];
+        positions[index + 1] = 0;
       }
-  
-      if(positions[index+2] == 0) {
-        positions[index+2] = positions[index+1];
-        positions[index+1] = 0;
+
+      if (positions[index + 1] == 0) {
+        positions[index + 1] = positions[index + 0];
+        positions[index + 0] = 0;
       }
-  
-      if(positions[index+1] == 0) {
-        positions[index+1] = positions[index+0];
-        positions[index+0] = 0;
+
+      if (positions[index + 2] == 0) {
+        positions[index + 2] = positions[index + 1];
+        positions[index + 1] = 0;
       }
-  
-      if(positions[index+2] == 0) {
-        positions[index+2] = positions[index+1];
-        positions[index+1] = 0;
+
+      if (positions[index + 1] == 0) {
+        positions[index + 1] = positions[index + 0];
+        positions[index + 0] = 0;
       }
-  
-      if(positions[index+1] == 0) {
-        positions[index+1] = positions[index+0];
-        positions[index+0] = 0;
+
+      if (positions[index + 3] == 0) {
+        positions[index + 3] = positions[index + 2];
+        positions[index + 2] = 0;
       }
-  
-      if(positions[index+3] == 0) {
-        positions[index+3] = positions[index+2];
-        positions[index+2] = 0;
+
+      if (positions[index + 3] == 0) {
+        positions[index + 3] = positions[index + 2];
+        positions[index + 2] = 0;
       }
-  
-      if(positions[index+3] == 0) {
-        positions[index+3] = positions[index+2];
-        positions[index+2] = 0;
+
+      if (positions[index + 3] == 0) {
+        positions[index + 3] = positions[index + 2];
+        positions[index + 2] = 0;
+      }
+
+      if (positions[index + 2] == 0) {
+        positions[index + 2] = positions[index + 1];
+        positions[index + 1] = 0;
+      }
+
+      if (positions[index + 1] == 0) {
+        positions[index + 1] = positions[index + 0];
+        positions[index + 0] = 0;
+      }
+
+      if (positions[index + 2] == 0) {
+        positions[index + 2] = positions[index + 1];
+        positions[index + 1] = 0;
+      }
+
+      if (positions[index + 1] == 0) {
+        positions[index + 1] = positions[index + 0];
+        positions[index + 0] = 0;
+      }
+
+      if (positions[index + 3] == 0) {
+        positions[index + 3] = positions[index + 2];
+        positions[index + 2] = 0;
+      }
+
+      if (positions[index + 3] == 0) {
+        positions[index + 3] = positions[index + 2];
+        positions[index + 2] = 0;
       }
     }
   }
 
   function moveright() {
-    for(let index = 0; index < 16; index = index+4) {
-      if(positions[index] == 0) {
-        positions[index] = positions[index+1];
-        positions[index+1] = 0;
-      }
-  
-      if(positions[index+1] == 0) {
-        positions[index+1] = positions[index+2];
-        positions[index+2] = 0;
-      }
-  
-      if(positions[index+2] == 0) {
-        positions[index+2] = positions[index+3];
-        positions[index+3] = 0;
-      }
-  
-      if(positions[index+3] == 0) {
-        positions[index+3] = positions[index+2];
-        positions[index+2] = 0;
-      }
-  
-      if(positions[index+2] == 0) {
-        positions[index+2] = positions[index+3];
-        positions[index+3] = 0;
-      }
-  
-      if(positions[index] == 0) {
-        positions[index] = positions[index+1];
-        positions[index+1] = 0;
-      }
-  
-      if(positions[index] == 0) {
-        positions[index] = positions[index+1];
-        positions[index+1] = 0;
+    for (let index = 0; index < 16; index = index + 4) {
+      if (positions[index] == 0) {
+        positions[index] = positions[index + 1];
+        positions[index + 1] = 0;
       }
 
-      if(positions[index] == 0) {
-        positions[index] = positions[index+1];
-        positions[index+1] = 0;
+      if (positions[index + 1] == 0) {
+        positions[index + 1] = positions[index + 2];
+        positions[index + 2] = 0;
       }
-  
-      if(positions[index+1] == 0) {
-        positions[index+1] = positions[index+2];
-        positions[index+2] = 0;
+
+      if (positions[index + 2] == 0) {
+        positions[index + 2] = positions[index + 3];
+        positions[index + 3] = 0;
       }
-  
-      if(positions[index+2] == 0) {
-        positions[index+2] = positions[index+3];
-        positions[index+3] = 0;
+
+      if (positions[index + 3] == 0) {
+        positions[index + 3] = positions[index + 2];
+        positions[index + 2] = 0;
       }
-  
-      if(positions[index+3] == 0) {
-        positions[index+3] = positions[index+2];
-        positions[index+2] = 0;
+
+      if (positions[index + 2] == 0) {
+        positions[index + 2] = positions[index + 3];
+        positions[index + 3] = 0;
       }
-  
-      if(positions[index+2] == 0) {
-        positions[index+2] = positions[index+3];
-        positions[index+3] = 0;
+
+      if (positions[index] == 0) {
+        positions[index] = positions[index + 1];
+        positions[index + 1] = 0;
       }
-  
-      if(positions[index+0] == 0) {
-        positions[index+0] = positions[index+1];
-        positions[index+1] = 0;
+
+      if (positions[index] == 0) {
+        positions[index] = positions[index + 1];
+        positions[index + 1] = 0;
       }
-  
-      if(positions[index+0] == 0) {
-        positions[index+0] = positions[index+1];
-        positions[index+1] = 0;
+
+      if (positions[index] == 0) {
+        positions[index] = positions[index + 1];
+        positions[index + 1] = 0;
+      }
+
+      if (positions[index + 1] == 0) {
+        positions[index + 1] = positions[index + 2];
+        positions[index + 2] = 0;
+      }
+
+      if (positions[index + 2] == 0) {
+        positions[index + 2] = positions[index + 3];
+        positions[index + 3] = 0;
+      }
+
+      if (positions[index + 3] == 0) {
+        positions[index + 3] = positions[index + 2];
+        positions[index + 2] = 0;
+      }
+
+      if (positions[index + 2] == 0) {
+        positions[index + 2] = positions[index + 3];
+        positions[index + 3] = 0;
+      }
+
+      if (positions[index + 0] == 0) {
+        positions[index + 0] = positions[index + 1];
+        positions[index + 1] = 0;
+      }
+
+      if (positions[index + 0] == 0) {
+        positions[index + 0] = positions[index + 1];
+        positions[index + 1] = 0;
       }
     }
   }
 
   function moveup() {
-    for( let index = 0; index < 4; index++) {
-      if(positions[index] == 0) {
-        positions[index] = positions[index+4];
-        positions[index+4] = 0;
+    for (let index = 0; index < 4; index++) {
+      if (positions[index] == 0) {
+        positions[index] = positions[index + 4];
+        positions[index + 4] = 0;
       }
 
-      if(positions[index+4] == 0) {
-        positions[index+4] = positions[index+8];
-        positions[index+8] = 0;
+      if (positions[index + 4] == 0) {
+        positions[index + 4] = positions[index + 8];
+        positions[index + 8] = 0;
       }
 
-      if(positions[index+8] == 0) {
-        positions[index+8] = positions[index+12];
-        positions[index+12] = 0;
+      if (positions[index + 8] == 0) {
+        positions[index + 8] = positions[index + 12];
+        positions[index + 12] = 0;
       }
 
-      if(positions[index+4] == 0) {
-        positions[index+4] = positions[index+8];
-        positions[index+8] = 0;
+      if (positions[index + 4] == 0) {
+        positions[index + 4] = positions[index + 8];
+        positions[index + 8] = 0;
       }
 
-      if(positions[index+8] == 0) {
-        positions[index+8] = positions[index+12];
-        positions[index+12] = 0;
+      if (positions[index + 8] == 0) {
+        positions[index + 8] = positions[index + 12];
+        positions[index + 12] = 0;
       }
 
-      if(positions[index] == 0) {
-        positions[index] = positions[index+4];
-        positions[index+4] = 0;
+      if (positions[index] == 0) {
+        positions[index] = positions[index + 4];
+        positions[index + 4] = 0;
       }
 
-      if(positions[index] == 0) {
-        positions[index] = positions[index+4];
-        positions[index+4] = 0;
+      if (positions[index] == 0) {
+        positions[index] = positions[index + 4];
+        positions[index + 4] = 0;
       }
 
-      if(positions[index] == 0) {
-        positions[index] = positions[index+4];
-        positions[index+4] = 0;
+      if (positions[index] == 0) {
+        positions[index] = positions[index + 4];
+        positions[index + 4] = 0;
       }
 
-      if(positions[index+4] == 0) {
-        positions[index+4] = positions[index+8];
-        positions[index+8] = 0;
+      if (positions[index + 4] == 0) {
+        positions[index + 4] = positions[index + 8];
+        positions[index + 8] = 0;
       }
 
-      if(positions[index+8] == 0) {
-        positions[index+8] = positions[index+12];
-        positions[index+12] = 0;
+      if (positions[index + 8] == 0) {
+        positions[index + 8] = positions[index + 12];
+        positions[index + 12] = 0;
       }
 
-      if(positions[index+4] == 0) {
-        positions[index+4] = positions[index+8];
-        positions[index+8] = 0;
+      if (positions[index + 4] == 0) {
+        positions[index + 4] = positions[index + 8];
+        positions[index + 8] = 0;
       }
 
-      if(positions[index+8] == 0) {
-        positions[index+8] = positions[index+12];
-        positions[index+12] = 0;
+      if (positions[index + 8] == 0) {
+        positions[index + 8] = positions[index + 12];
+        positions[index + 12] = 0;
       }
 
-      if(positions[index] == 0) {
-        positions[index] = positions[index+4];
-        positions[index+4] = 0;
+      if (positions[index] == 0) {
+        positions[index] = positions[index + 4];
+        positions[index + 4] = 0;
       }
 
-      if(positions[index] == 0) {
-        positions[index] = positions[index+4];
-        positions[index+4] = 0;
+      if (positions[index] == 0) {
+        positions[index] = positions[index + 4];
+        positions[index + 4] = 0;
       }
     }
   }
 
   function movedown() {
-    for(let index = 0; index < 4; index++) {
-      if(positions[index+12] == 0) {
-        positions[index+12] = positions[index+8];
-        positions[index+8] = 0;
-      }
-  
-      if(positions[index+8] == 0) {
-        positions[index+8] = positions[index+4];
-        positions[index+4] = 0;
-      }
-  
-      if(positions[index+4] == 0) {
-        positions[index+4] = positions[index];
-        positions[index] = 0;
-      }
-  
-      if(positions[index+8] == 0) {
-        positions[index+8] = positions[index+4];
-        positions[index+4] = 0;
-      }
-  
-      if(positions[index+4] == 0) {
-        positions[index+4] = positions[index];
-        positions[index] = 0;
-      }
-  
-      if(positions[index+12] == 0) {
-        positions[index+12] = positions[index+8];
-        positions[index+8] = 0;
-      }
-  
-      if(positions[index+12] == 0) {
-        positions[index+12] = positions[index+8];
-        positions[index+8] = 0;
+    for (let index = 0; index < 4; index++) {
+      if (positions[index + 12] == 0) {
+        positions[index + 12] = positions[index + 8];
+        positions[index + 8] = 0;
       }
 
-      if(positions[index+12] == 0) {
-        positions[index+12] = positions[index+8];
-        positions[index+8] = 0;
+      if (positions[index + 8] == 0) {
+        positions[index + 8] = positions[index + 4];
+        positions[index + 4] = 0;
       }
-  
-      if(positions[index+8] == 0) {
-        positions[index+8] = positions[index+4];
-        positions[index+4] = 0;
-      }
-  
-      if(positions[index+4] == 0) {
-        positions[index+4] = positions[index];
+
+      if (positions[index + 4] == 0) {
+        positions[index + 4] = positions[index];
         positions[index] = 0;
       }
-  
-      if(positions[index+8] == 0) {
-        positions[index+8] = positions[index+4];
-        positions[index+4] = 0;
+
+      if (positions[index + 8] == 0) {
+        positions[index + 8] = positions[index + 4];
+        positions[index + 4] = 0;
       }
-  
-      if(positions[index+4] == 0) {
-        positions[index+4] = positions[index];
+
+      if (positions[index + 4] == 0) {
+        positions[index + 4] = positions[index];
         positions[index] = 0;
       }
-  
-      if(positions[index+12] == 0) {
-        positions[index+12] = positions[index+8];
-        positions[index+8] = 0;
+
+      if (positions[index + 12] == 0) {
+        positions[index + 12] = positions[index + 8];
+        positions[index + 8] = 0;
       }
-  
-      if(positions[index+12] == 0) {
-        positions[index+12] = positions[index+8];
-        positions[index+8] = 0;
+
+      if (positions[index + 12] == 0) {
+        positions[index + 12] = positions[index + 8];
+        positions[index + 8] = 0;
+      }
+
+      if (positions[index + 12] == 0) {
+        positions[index + 12] = positions[index + 8];
+        positions[index + 8] = 0;
+      }
+
+      if (positions[index + 8] == 0) {
+        positions[index + 8] = positions[index + 4];
+        positions[index + 4] = 0;
+      }
+
+      if (positions[index + 4] == 0) {
+        positions[index + 4] = positions[index];
+        positions[index] = 0;
+      }
+
+      if (positions[index + 8] == 0) {
+        positions[index + 8] = positions[index + 4];
+        positions[index + 4] = 0;
+      }
+
+      if (positions[index + 4] == 0) {
+        positions[index + 4] = positions[index];
+        positions[index] = 0;
+      }
+
+      if (positions[index + 12] == 0) {
+        positions[index + 12] = positions[index + 8];
+        positions[index + 8] = 0;
+      }
+
+      if (positions[index + 12] == 0) {
+        positions[index + 12] = positions[index + 8];
+        positions[index + 8] = 0;
       }
     }
   }
