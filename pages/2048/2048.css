@@ -10,7 +10,7 @@ body {
   justify-content: center;
 }
 
-#square {
+.square {
   width: 3em;
   height: 3em;
   border: 0.1em solid #ffffff;
@@ -18,4 +18,10 @@ body {
   text-align: center;
   align-items: center;
   display: flex;
+  background-color: darkgrey;
+}
+
+#end {
+  font-size: 2em;
+  color: red
 }
