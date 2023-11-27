@@ -31,6 +31,11 @@ export const serverMeta: ServerMeta = () => {
 };
 
 export const init: Init = () => {
+  let music = new Audio(
+    "pages/2048/rsc/Wer_wird_Millionar_Soundtracks_2_-_50-500_.mp3"
+  );
+  music.volume = 0.3;
+  music.play();
   const resetButton = document.querySelector("#resetbutton");
 
   let positions = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -56,6 +61,10 @@ export const init: Init = () => {
     }
     read();
     document.getElementById("end")!.innerHTML = "";
+    localStorage.setItem("high", score.toString());
+    document.getElementById("highscore")!.innerHTML = localStorage
+      .getItem("high")!
+      .toString();
     document.getElementById("score")!.innerHTML = "0";
   });
 
