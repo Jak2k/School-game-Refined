@@ -10,7 +10,12 @@ if (typeof document === "undefined") {
     createElement: () => {},
   };
 }
-// filledsquares = [[123, color]]
+let highscorelabel = document.querySelector("#highscore")!;
+const audiomanagebutton = document.querySelector("#musictogglebutton")!;
+let timerId: any;
+let lineclearsound;
+let score = 0;
+const music = document.querySelector("#music") as HTMLAudioElement;
 let squares: HTMLDivElement[] = [];
 const startBtn = document.querySelector("#start-button")!;
 let currentPosition = 0;
@@ -102,11 +107,33 @@ function createGrid() {
 
 export const serverHTML: ServerHTML = () => `
     <a href="..">Back</a>
+    
+    <audio id="music" src="pages/Tetris/rsc/Tetris.mp3" loop></audio>
+    <div id="content">
     <div class="grid">
     ${createGrid()}
     </div>
+    <div id="subcontent">
     <button id="start-button">Start</button>
+    <button id="musictogglebutton">Audio: On</button>
+    <p id="score">Score: 0</p>
+    <p id="highscore">Highscore: loading</p>
+    </div>
+    
+    
+    
+    </div>
 `;
+
+function togglemusic() {
+  if (music.paused) {
+    music.play();
+    music.volume = 0.3;
+    music.currentTime = 0;
+    return;
+  }
+  music.pause();
+}
 
 export const serverMeta: ServerMeta = () => {
   return {
@@ -116,6 +143,24 @@ export const serverMeta: ServerMeta = () => {
 };
 
 export const init: Init = () => {
+  if (localStorage.getItem("highscore") === null) {
+    highscorelabel.innerHTML = `Highscore: 0`;
+  } else {
+    highscorelabel.innerHTML = `Highscore: ${localStorage.getItem(
+      "highscore"
+    )}`;
+  }
+
+  audiomanagebutton.addEventListener("click", () => {
+    if (music.paused) {
+      music.play();
+      audiomanagebutton.innerHTML = "Audio: On";
+    } else {
+      music.pause();
+      audiomanagebutton.innerHTML = "Audio: Off";
+    }
+  });
+
   startBtn.addEventListener("click", () => {
     for (let i = 0; i < 200; i++) {
       const square = document.getElementById(i.toString());
@@ -124,13 +169,20 @@ export const init: Init = () => {
       }
     }
 
+    lineclearsound = new Audio("pages/Tetris/rsc/tetris-line-clear-sound.mp3");
+    lineclearsound.volume = 0.3;
+    music.volume = 0.3;
+    if (running === false || music.paused) {
+      music.play();
+    }
+
     if (running === true) {
       return;
     }
     newTetrominoe();
 
     displayShape();
-    let timerId = setInterval(moveDown, 1000);
+    timerId = setInterval(moveDown, 1000);
     running = true;
   });
 
@@ -157,6 +209,36 @@ export const init: Init = () => {
   });
 };
 
+function savehighscore() {
+  let highscore = localStorage.getItem("highscore");
+  if (highscore) {
+    if (score > parseInt(highscore)) {
+      localStorage.setItem("highscore", score.toString());
+    }
+  } else {
+    localStorage.setItem("highscore", score.toString());
+  }
+}
+
+function addscore(points: number) {
+  score += points;
+  document.getElementById("score")!.innerHTML = `Score: ${score}`;
+}
+
+function endgame() {
+  clearInterval(timerId);
+  timerId = null;
+  savehighscore();
+  score = 0;
+  document.getElementById("score")!.innerHTML = `Score: ${score}`;
+  filledsquares = [];
+  undraw();
+  running = false;
+  music.pause();
+  music.currentTime = 0;
+  alert("Game Over");
+}
+
 function deleteLine(line: number) {
   for (let i = filledsquares.length - 1; i >= 0; i--) {
     if (
@@ -166,6 +248,7 @@ function deleteLine(line: number) {
       filledsquares.splice(i, 1);
     }
   }
+  addscore(200);
   movedownremainingblocks(line);
   undraw();
   displayShape();
@@ -228,7 +311,10 @@ function newTetrominoe() {
 }
 
 function saveTetrominoe() {
-  let temparray: number[] = [];
+  if (currentPosition < 10) {
+    endgame();
+    return;
+  }
   theTetrominoes[currentTetrominoe][currentrotation].forEach((index: any) => {
     filledsquares.push([index + currentPosition, colors[currentColor]]);
   });
@@ -239,6 +325,7 @@ function saveTetrominoe() {
   for (let i = 4; i > 0; i--) {
     checkLines();
   }
+  addscore(10);
 }
 
 function moveLeft() {
