@@ -301,8 +301,6 @@ export const init: Init = () => {
         }
       }
     }
-    console.log(losecount);
-    console.log(positions);
     if (losecount == 16) {
       document.getElementById("end")!.innerHTML = "GAME OVER";
       if (score > Number(localStorage.getItem("high"))) {
