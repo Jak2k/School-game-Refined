@@ -10,10 +10,11 @@ if (typeof document === "undefined") {
     createElement: () => {},
   };
 }
+let playsoundeffect = false;
 let highscorelabel = document.querySelector("#highscore")!;
 const audiomanagebutton = document.querySelector("#musictogglebutton")!;
 let timerId: any;
-let lineclearsound;
+let lineclearsound: HTMLAudioElement;
 let score = 0;
 const music = document.querySelector("#music") as HTMLAudioElement;
 let squares: HTMLDivElement[] = [];
@@ -119,21 +120,8 @@ export const serverHTML: ServerHTML = () => `
     <p id="score">Score: 0</p>
     <p id="highscore">Highscore: loading</p>
     </div>
-    
-    
-    
     </div>
 `;
-
-function togglemusic() {
-  if (music.paused) {
-    music.play();
-    music.volume = 0.3;
-    music.currentTime = 0;
-    return;
-  }
-  music.pause();
-}
 
 export const serverMeta: ServerMeta = () => {
   return {
@@ -179,6 +167,7 @@ export const init: Init = () => {
     if (running === true) {
       return;
     }
+    undraw();
     newTetrominoe();
 
     displayShape();
@@ -232,7 +221,6 @@ function endgame() {
   score = 0;
   document.getElementById("score")!.innerHTML = `Score: ${score}`;
   filledsquares = [];
-  undraw();
   running = false;
   music.pause();
   music.currentTime = 0;
@@ -248,6 +236,7 @@ function deleteLine(line: number) {
       filledsquares.splice(i, 1);
     }
   }
+  playsoundeffect = true;
   addscore(200);
   movedownremainingblocks(line);
   undraw();
@@ -325,6 +314,10 @@ function saveTetrominoe() {
   for (let i = 4; i > 0; i--) {
     checkLines();
   }
+  if(playsoundeffect) {
+    lineclearsound.play();
+    playsoundeffect = false;
+  }
   addscore(10);
 }
 
@@ -383,6 +376,10 @@ function moveRight() {
 function moveDown() {
   for (let i = 0; i < 4; i++) {
     checkLines();
+  }
+  if(playsoundeffect) {
+    lineclearsound.play();
+    playsoundeffect = false;
   }
 
   let end = false;
