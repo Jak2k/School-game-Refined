@@ -43,6 +43,14 @@
   margin-bottom: 1em;
 }
 
+#subsubcontent {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
 button {
   background: #111;
   border: #ffffff;

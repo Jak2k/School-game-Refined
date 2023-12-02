@@ -10,13 +10,12 @@ if (typeof document === "undefined") {
     createElement: () => {},
   };
 }
+const musicbutton = document.querySelector("#music-button")!;
 let playsoundeffect = false;
 let highscorelabel = document.querySelector("#highscore")!;
-const audiomanagebutton = document.querySelector("#musictogglebutton")!;
 let timerId: any;
 let lineclearsound: HTMLAudioElement;
 let score = 0;
-const music = document.querySelector("#music") as HTMLAudioElement;
 let squares: HTMLDivElement[] = [];
 const startBtn = document.querySelector("#start-button")!;
 let currentPosition = 0;
@@ -106,23 +105,35 @@ function createGrid() {
   return grid;
 }
 
+async function loadmusic() {
+  const response = await fetch(
+    "https://ia802905.us.archive.org/11/items/TetrisThemeMusic/Tetris.mp3"
+  );
+  const url = response.url;
+  const music = new Audio(url);
+  return music;
+}
+
 export const serverHTML: ServerHTML = () => `
     <a href="..">Back</a>
-    
-    <audio id="music" src="pages/Tetris/rsc/Tetris.mp3" loop></audio>
     <div id="content">
     <div class="grid">
     ${createGrid()}
     </div>
-    <div id="subcontent">
+  <div id="subcontent">
+    <div id="buttondiv">
     <button id="start-button">Start</button>
-    <button id="musictogglebutton">Audio: On</button>
+    <button id="music-button">Music: On</button>
+    </div>
+    <div id="labeldiv">
     <p id="score">Score: 0</p>
     <p id="highscore">Highscore: loading</p>
     </div>
     </div>
-`;
 
+    </div>
+`;
+//<iframe src="https://ia802905.us.archive.org/11/items/TetrisThemeMusic/Tetris.mp3" allow="loop" style="display:none" id="music"></iframe>
 export const serverMeta: ServerMeta = () => {
   return {
     title: "Tetris",
@@ -131,6 +142,9 @@ export const serverMeta: ServerMeta = () => {
 };
 
 export const init: Init = () => {
+  let music = loadmusic();
+  lineclearsound = new Audio("pages/Tetris/rsc/tetris-line-clear-sound.mp3");
+  lineclearsound.volume = 0.1;
   if (localStorage.getItem("highscore") === null) {
     highscorelabel.innerHTML = `Highscore: 0`;
   } else {
@@ -139,17 +153,10 @@ export const init: Init = () => {
     )}`;
   }
 
-  audiomanagebutton.addEventListener("click", () => {
-    if (music.paused) {
-      music.play();
-      audiomanagebutton.innerHTML = "Audio: On";
-    } else {
-      music.pause();
-      audiomanagebutton.innerHTML = "Audio: Off";
-    }
-  });
-
   startBtn.addEventListener("click", () => {
+    if (running === true) {
+      return;
+    }
     for (let i = 0; i < 200; i++) {
       const square = document.getElementById(i.toString());
       if (square instanceof HTMLDivElement) {
@@ -157,28 +164,35 @@ export const init: Init = () => {
       }
     }
 
-    lineclearsound = new Audio("pages/Tetris/rsc/tetris-line-clear-sound.mp3");
-    lineclearsound.volume = 0.3;
-    music.volume = 0.3;
-    if (running === false || music.paused) {
+    music.then((music) => {
+      music.loop = true;
+      music.volume = 0.5;
       music.play();
-    }
-
-    if (running === true) {
-      return;
-    }
+    });
     undraw();
     newTetrominoe();
 
     displayShape();
     timerId = setInterval(moveDown, 1000);
     running = true;
+    musicbutton.addEventListener("click", () => {
+      music.then((music) => {
+        if (music.paused) {
+          music.play();
+          musicbutton.innerHTML = "Music: On";
+        } else {
+          music.pause();
+          musicbutton.innerHTML = "Music: Off";
+        }
+      });
+    });
   });
 
   document.addEventListener("keydown", (e) => {
     if (running === false) {
       return;
     }
+    e.preventDefault();
     switch (e.key) {
       case "ArrowLeft":
         moveLeft();
@@ -222,8 +236,6 @@ function endgame() {
   document.getElementById("score")!.innerHTML = `Score: ${score}`;
   filledsquares = [];
   running = false;
-  music.pause();
-  music.currentTime = 0;
   alert("Game Over");
 }
 
@@ -314,7 +326,7 @@ function saveTetrominoe() {
   for (let i = 4; i > 0; i--) {
     checkLines();
   }
-  if(playsoundeffect) {
+  if (playsoundeffect) {
     lineclearsound.play();
     playsoundeffect = false;
   }
@@ -377,7 +389,7 @@ function moveDown() {
   for (let i = 0; i < 4; i++) {
     checkLines();
   }
-  if(playsoundeffect) {
+  if (playsoundeffect) {
     lineclearsound.play();
     playsoundeffect = false;
   }
