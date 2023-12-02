@@ -11,6 +11,8 @@ if (typeof document === "undefined") {
   };
 }
 const musicbutton = document.querySelector("#music-button")!;
+let speed = 1000;
+let music: Promise<any>;
 let playsoundeffect = false;
 let highscorelabel = document.querySelector("#highscore")!;
 let timerId: any;
@@ -18,7 +20,7 @@ let lineclearsound: HTMLAudioElement;
 let score = 0;
 let squares: HTMLDivElement[] = [];
 const startBtn = document.querySelector("#start-button")!;
-let currentPosition = 0;
+let currentPosition = 4;
 let currentTetrominoe = 0;
 let currentColor = 0;
 let filledsquares: any[][] = [];
@@ -142,7 +144,25 @@ export const serverMeta: ServerMeta = () => {
 };
 
 export const init: Init = () => {
-  let music = loadmusic();
+  music = loadmusic();
+  music.then((music) => {
+    music.loop = true;
+    music.volume = 0.5;
+    music.play();
+  });
+
+  musicbutton.addEventListener("click", () => {
+    music.then((music) => {
+      if (music.paused) {
+        music.play();
+        musicbutton.innerHTML = "Music: On";
+      } else {
+        music.pause();
+        musicbutton.innerHTML = "Music: Off";
+      }
+    });
+  });
+
   lineclearsound = new Audio("pages/Tetris/rsc/tetris-line-clear-sound.mp3");
   lineclearsound.volume = 0.1;
   if (localStorage.getItem("highscore") === null) {
@@ -164,28 +184,13 @@ export const init: Init = () => {
       }
     }
 
-    music.then((music) => {
-      music.loop = true;
-      music.volume = 0.5;
-      music.play();
-    });
     undraw();
     newTetrominoe();
 
     displayShape();
-    timerId = setInterval(moveDown, 1000);
+
+    timerId = setInterval(moveDown, speed - score / 10);
     running = true;
-    musicbutton.addEventListener("click", () => {
-      music.then((music) => {
-        if (music.paused) {
-          music.play();
-          musicbutton.innerHTML = "Music: On";
-        } else {
-          music.pause();
-          musicbutton.innerHTML = "Music: Off";
-        }
-      });
-    });
   });
 
   document.addEventListener("keydown", (e) => {
@@ -226,6 +231,12 @@ function savehighscore() {
 function addscore(points: number) {
   score += points;
   document.getElementById("score")!.innerHTML = `Score: ${score}`;
+}
+
+function changeSpeed() {
+  speed = 1000 - score / 50;
+  clearInterval(timerId);
+  timerId = setInterval(moveDown, speed);
 }
 
 function endgame() {
@@ -320,7 +331,7 @@ function saveTetrominoe() {
     filledsquares.push([index + currentPosition, colors[currentColor]]);
   });
   currentrotation = 0;
-  currentPosition = 0;
+  currentPosition = 4;
   newTetrominoe();
   displayShape();
   for (let i = 4; i > 0; i--) {
@@ -386,6 +397,7 @@ function moveRight() {
 }
 
 function moveDown() {
+  changeSpeed();
   for (let i = 0; i < 4; i++) {
     checkLines();
   }
