@@ -175,6 +175,7 @@ export const init: Init = () => {
     if (running === true) {
       return;
     }
+    score = 0;
     for (let i = 0; i < 200; i++) {
       const square = document.getElementById(i.toString());
       if (square instanceof HTMLDivElement) {
@@ -244,7 +245,6 @@ function endgame() {
   clearInterval(timerId);
   timerId = null;
   savehighscore();
-  score = 0;
   document.getElementById("score")!.innerHTML = `Score: ${score}`;
   filledsquares = [];
   running = false;
