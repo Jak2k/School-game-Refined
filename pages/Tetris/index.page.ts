@@ -29,47 +29,46 @@ let currentrotation = 0;
 const theTetrominoes = [
   [
     [0, 10, 20, 21],
-    [0, 1, 2, 10], //90° right
-    [0, 1, 11, 21], //180° right
-    [2, 10, 11, 12], //270° right
+    [0, 1, 2, 10],
+    [0, 1, 11, 21],
+    [2, 10, 11, 12],
   ],
-  // lTetromino
   [
     [1, 11, 21, 20],
-    [0, 10, 11, 12], //90° right
-    [0, 1, 10, 20], //180° right
-    [0, 1, 2, 12], //270° right
-  ], // inverted lTetromino
+    [0, 10, 11, 12],
+    [0, 1, 10, 20],
+    [0, 1, 2, 12],
+  ],
   [
-    [0, 1, 11, 12],
     [1, 11, 10, 20],
     [0, 1, 11, 12],
     [1, 11, 10, 20],
-  ], // zTetromino
+    [0, 1, 11, 12],
+  ],
   [
-    [1, 2, 10, 11],
     [0, 10, 11, 21],
     [1, 2, 10, 11],
     [0, 10, 11, 21],
-  ], //inverted zTetromino
+    [1, 2, 10, 11],
+  ],
   [
     [0, 1, 2, 11],
     [1, 10, 11, 21],
     [1, 10, 11, 12],
     [1, 11, 21, 12],
-  ], // tTetromino
+  ],
   [
     [0, 1, 10, 11],
     [0, 1, 10, 11],
     [0, 1, 10, 11],
     [0, 1, 10, 11],
-  ], // oTetromino
+  ],
   [
+    [-1, 0, 1, 2],
     [0, 10, 20, 30],
-    [0, 1, 2, 3], //90° right
-    [0, 10, 20, 30], //180° right
-    [0, 1, 2, 3], //270° right
-  ], // iTetromino
+     [-1, 0, 1, 2],
+    [0, 10, 20, 30],
+  ],
 ];
 
 let Tetrominoelines = [
@@ -135,7 +134,6 @@ export const serverHTML: ServerHTML = () => `
 
     </div>
 `;
-//<iframe src="https://ia802905.us.archive.org/11/items/TetrisThemeMusic/Tetris.mp3" allow="loop" style="display:none" id="music"></iframe>
 export const serverMeta: ServerMeta = () => {
   return {
     title: "Tetris",
@@ -189,7 +187,7 @@ export const init: Init = () => {
 
     displayShape();
 
-    timerId = setInterval(moveDown, speed - score / 10);
+    timerId = setInterval(moveDown, speed);
     running = true;
   });
 
@@ -235,6 +233,9 @@ function addscore(points: number) {
 
 function changeSpeed() {
   speed = 1000 - score / 50;
+  if(speed < 200) {
+    speed = 200;
+  }
   clearInterval(timerId);
   timerId = setInterval(moveDown, speed);
 }
