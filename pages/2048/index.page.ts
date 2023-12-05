@@ -61,7 +61,6 @@ export const init: Init = () => {
     }
     read();
     document.getElementById("end")!.innerHTML = "";
-    localStorage.setItem("high", score.toString());
     document.getElementById("highscore")!.innerHTML = localStorage
       .getItem("high")!
       .toString();
