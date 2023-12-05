@@ -1,0 +1,410 @@
+import "../../style.css";
+import { type ServerHTML, ServerMeta, Init } from "../../renderer/types";
+
+export const serverHTML: ServerHTML = () => `
+
+    <input type="text" id="Textfeld1" value="" />
+
+    <p id="inhalt" p></p>
+
+    <button onclick="myFunction ()">Auslesen und anzeigen</button>
+
+    <script>
+      function myFunction() {
+        let a = Number(document.getElementById("Textfeld1").value),
+          b = document.getElementById("Textfeld1").value.length,
+          c = document.getElementById("Textfeld1").value.substr(0, 1),
+          g = 0,
+          h,
+          i,
+          j,
+          l,
+          m = 0,
+          o,
+          p = 0,
+          q,
+          s,
+          t,
+          r = 0,
+          airway = [],
+          airwaya = [],
+          y = document.getElementById("Textfeld1").value;
+
+        let count = 0;
+
+        for (let d = b; d > -1; d--) {
+          let x = document.getElementById("Textfeld1").value.substr(d - 1, 1);
+          if (x != "0") {
+            g++;
+          }
+          if (x != "1") {
+            g++;
+          }
+          if (x != "2") {
+            g++;
+          }
+          if (x != "3") {
+            g++;
+          }
+          if (x != "4") {
+            g++;
+          }
+          if (x != "5") {
+            g++;
+          }
+          if (x != "6") {
+            g++;
+          }
+          if (x != "7") {
+            g++;
+          }
+          if (x != "8") {
+            g++;
+          }
+          if (x != "9") {
+            g++;
+          }
+          if (x != "+") {
+            g++;
+          }
+          if (x != "-") {
+            g++;
+          }
+          if (x != "*") {
+            g++;
+          }
+          if (x != "/") {
+            g++;
+          }
+          if (x != "(") {
+            g++;
+          }
+          if (x != ")") {
+            g++;
+          }
+          if (x != ",") {
+            g++;
+          }
+          if (x == "(") {
+            p++;
+          }
+          if (g == 17) {
+            y = y.substr(0, d - 1) + y.substr(d, b - d);
+          }
+          g = 0;
+          h = y;
+        }
+
+        for (p = p; p > 0; p--) {
+          q = h;
+          while (q.substr(q.length - 1, 1) != "(") {
+            q = q.substr(0, q.length - 1);
+          }
+          r = q.length;
+          q = h.substr(q.length, h.length - r);
+          while (q.substr(0, 1) != ")") {
+            q = q.substr(1, q.length - 1);
+          }
+          r = h.substr(r, h.length - r - q.length);
+          q = q.substr(1, q.length - 1);
+
+          t = h;
+          h = r;
+          y = r;
+
+          for (let d = y.length; d > 0; d--) {
+            let x = y.substr(d - 1, 1);
+            let z = y.substr(d, 1);
+            if (x == "+") {
+              g++;
+            }
+            if (x == "-") {
+              g++;
+            }
+            if (x == "*") {
+              g++;
+            }
+            if (x == "/") {
+              g++;
+            }
+            if (z == "+") {
+              g++;
+            }
+            if (z == "-") {
+              g++;
+            }
+            if (z == "*") {
+              g++;
+            }
+            if (z == "/") {
+              g++;
+            }
+            if (g > 1) {
+              h = h.substr(0, d) + h.substr(d + 1, b - d);
+            }
+            g = 0;
+          }
+          g = 0;
+
+          let n = h.substr(0, 1);
+          if (n == "+") {
+            g++;
+          }
+          if (n == "-") {
+            g++;
+          }
+          if (n == "*") {
+            g++;
+          }
+          if (n == "/") {
+            g++;
+          }
+          if (g == 1) {
+            h = h.substr(1, h.length);
+          }
+          g = 0;
+
+          n = h.substr(h.length - 1, 1);
+          if (n == "+") {
+            g++;
+          }
+          if (n == "-") {
+            g++;
+          }
+          if (n == "*") {
+            g++;
+          }
+          if (n == "/") {
+            g++;
+          }
+          if (g == 1) {
+            h = h.substr(0, h.length - 1);
+          }
+          g = 0;
+
+          for (let d = 0; h.length > d; d++) {
+            l = h.substr(d - 1, 1);
+            o = g;
+            if (l == "+") {
+              g++;
+            }
+            if (l == "-") {
+              g++;
+            }
+            if (l == "*") {
+              g++;
+            }
+            if (l == "/") {
+              g++;
+            }
+            if (g > o) {
+              airwaya.push(l);
+            }
+          }
+
+          i = h;
+
+          for (; g > -1; g--) {
+            while (isNaN(i)) {
+              i = i.substr(0, i.length - 1);
+            }
+            if (isNaN(i / 3)) {
+              console.log("i dont know");
+            } else {
+              i = i * 10;
+            }
+            airway.push(i);
+            i = h.substr(i.length + 1, h.length - i.length - 1);
+            h = i;
+          }
+
+          for (d = 0; airwaya.length > d; d++) {
+            g = 0;
+            if (airwaya[d] == "*") {
+              airwaya.splice(d, 1);
+              airway[d + 1] = airway[d] * airway[d + 1];
+              airway.splice(d, 1);
+              d--;
+            }
+            if (airwaya[d] == "/") {
+              airwaya.splice(d, 1);
+              airway[d + 1] = airway[d] / airway[d + 1];
+              airway.splice(d, 1);
+              d--;
+            }
+          }
+
+          for (d = 0; airwaya.length > d; d++) {
+            g = 0;
+            if (airwaya[d] == "+") {
+              airwaya.splice(d, 1);
+              airway[d + 1] = Number(airway[d]) + Number(airway[d + 1]);
+              airway.splice(d, 1);
+              d--;
+            }
+            if (airwaya[d] == "-") {
+              airwaya.splice(d, 1);
+              airway[d + 1] = Number(airway[d]) - Number(airway[d + 1]);
+              airway.splice(d, 1);
+              d--;
+            }
+          }
+          g = 0;
+
+          s = airway;
+
+          h = t.substr(0, t.length - 2 - r.length - q.length) + s + q;
+          y = h;
+          airway.pop();
+          airwaya.pop();
+        }
+
+        for (let d = y.length; d > 0; d--) {
+          let x = y.substr(d - 1, 1);
+          let z = y.substr(d, 1);
+          if (x == "+") {
+            g++;
+          }
+          if (x == "-") {
+            g++;
+          }
+          if (x == "*") {
+            g++;
+          }
+          if (x == "/") {
+            g++;
+          }
+          if (z == "+") {
+            g++;
+          }
+          if (z == "-") {
+            g++;
+          }
+          if (z == "*") {
+            g++;
+          }
+          if (z == "/") {
+            g++;
+          }
+          if (g > 1) {
+            h = h.substr(0, d) + h.substr(d + 1, b - d);
+          }
+          g = 0;
+        }
+        g = 0;
+
+        let n = h.substr(0, 1);
+        if (n == "+") {
+          g++;
+        }
+        if (n == "-") {
+          g++;
+        }
+        if (n == "*") {
+          g++;
+        }
+        if (n == "/") {
+          g++;
+        }
+        if (g == 1) {
+          h = h.substr(1, h.length);
+        }
+        g = 0;
+
+        n = h.substr(h.length - 1, 1);
+        if (n == "+") {
+          g++;
+        }
+        if (n == "-") {
+          g++;
+        }
+        if (n == "*") {
+          g++;
+        }
+        if (n == "/") {
+          g++;
+        }
+        if (g == 1) {
+          h = h.substr(0, h.length - 1);
+        }
+        g = 0;
+
+        for (let d = 0; h.length > d; d++) {
+          l = h.substr(d - 1, 1);
+          o = g;
+          if (l == "+") {
+            g++;
+          }
+          if (l == "-") {
+            g++;
+          }
+          if (l == "*") {
+            g++;
+          }
+          if (l == "/") {
+            g++;
+          }
+          if (g > o) {
+            airwaya.push(l);
+          }
+        }
+
+        i = h;
+
+        for (; g > -1; g--) {
+          while (isNaN(i)) {
+            i = i.substr(0, i.length - 1);
+          }
+          airway.push(i);
+          i = h.substr(i.length + 1, h.length - i.length - 1);
+          h = i;
+        }
+
+        for (d = 0; airwaya.length > d; d++) {
+          g = 0;
+          if (airwaya[d] == "*") {
+            airwaya.splice(d, 1);
+            airway[d + 1] = airway[d] * airway[d + 1];
+            airway.splice(d, 1);
+            d--;
+          }
+          if (airwaya[d] == "/") {
+            airwaya.splice(d, 1);
+            airway[d + 1] = airway[d] / airway[d + 1];
+            airway.splice(d, 1);
+            d--;
+          }
+        }
+
+        for (d = 0; airwaya.length > d; d++) {
+          g = 0;
+          if (airwaya[d] == "+") {
+            airwaya.splice(d, 1);
+            airway[d + 1] = Number(airway[d]) + Number(airway[d + 1]);
+            airway.splice(d, 1);
+            d--;
+          }
+          if (airwaya[d] == "-") {
+            airwaya.splice(d, 1);
+            airway[d + 1] = Number(airway[d]) - Number(airway[d + 1]);
+            airway.splice(d, 1);
+            d--;
+          }
+        }
+
+        document.getElementById("inhalt").innerHTML = airway;
+      }
+    </script>
+
+`;
+
+export const serverMeta: ServerMeta = () => {
+  return {
+    title: "Hello Vite World",
+    description: "This is the description of the page",
+  };
+};
+
+export const init: Init = () => {
+  
+};

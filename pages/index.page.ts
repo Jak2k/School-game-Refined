@@ -4,19 +4,13 @@ import { type ServerHTML, ServerMeta, Init } from "../renderer/types";
 export const serverHTML: ServerHTML = () => `
 <div id="games">
   <div class="game">
-    <a href="/2048" class="name">2048</a>
+  <button class="gamebutton" onclick="window.location.href = '/2048'">2048</button>
   </div>
   <div class="game">
-    <a href="/Tetris" class="name">Tetris</a>
+  <button class="gamebutton" onclick="window.location.href = '/Tetris'">Tetris</button>
   </div>
   <div class="game">
-    <a href="/2048" class="name">Fill</a>
-  </div>
-  <div class="game">
-    <a href="/2048" class="name">Fill</a>
-  </div>
-  <div class="game">
-    <a href="/2048" class="name">Fill</a>
+  <button class="gamebutton" onclick="window.location.href = '/calculator'">Rechner</button>
   </div>
 
 </div>
