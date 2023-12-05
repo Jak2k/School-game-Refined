@@ -23,5 +23,9 @@ body {
 
 #end {
   font-size: 2em;
-  color: red
+  color: red;
+}
+
+a {
+  font-size: 0.5em;
 }
