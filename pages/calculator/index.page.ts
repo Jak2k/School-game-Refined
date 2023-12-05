@@ -1,14 +1,17 @@
 import "../../style.css";
+import "./calculator.css";
 import { type ServerHTML, ServerMeta, Init } from "../../renderer/types";
 
 export const serverHTML: ServerHTML = () => `
-
+<a href="/">Back</a>
+<div id="content">
+    
     <input type="text" id="Textfeld1" value="" />
 
     <p id="inhalt" p></p>
 
     <button onclick="myFunction ()">Auslesen und anzeigen</button>
-
+</div>
     <script>
       function myFunction() {
         let a = Number(document.getElementById("Textfeld1").value),
@@ -405,6 +408,4 @@ export const serverMeta: ServerMeta = () => {
   };
 };
 
-export const init: Init = () => {
-  
-};
+export const init: Init = () => {};
