@@ -11,6 +11,7 @@ if (typeof document === "undefined") {
   };
 }
 const musicbutton = document.querySelector("#music-button")!;
+const resetbutton = document.querySelector("#reset")!;
 let speed = 1000;
 let music: Promise<any>;
 let playsoundeffect = false;
@@ -66,7 +67,7 @@ const theTetrominoes = [
   [
     [-1, 0, 1, 2],
     [0, 10, 20, 30],
-     [-1, 0, 1, 2],
+    [-1, 0, 1, 2],
     [0, 10, 20, 30],
   ],
 ];
@@ -125,6 +126,7 @@ export const serverHTML: ServerHTML = () => `
     <div id="buttondiv">
     <button id="start-button">Start</button>
     <button id="music-button">Music: On</button>
+    <button id="reset">Reset</button>
     </div>
     <div id="labeldiv">
     <p id="score">Score: 0</p>
@@ -190,6 +192,9 @@ export const init: Init = () => {
 
     timerId = setInterval(moveDown, speed);
     running = true;
+    resetbutton.addEventListener("click", () => {
+      endgame("reset");
+    });
   });
 
   document.addEventListener("keydown", (e) => {
@@ -225,30 +230,40 @@ function savehighscore() {
   } else {
     localStorage.setItem("highscore", score.toString());
   }
+  highscorelabel.innerHTML = `Highscore: ${localStorage.getItem("highscore")}`;
 }
 
 function addscore(points: number) {
   score += points;
   document.getElementById("score")!.innerHTML = `Score: ${score}`;
+  if(score > Number(localStorage.getItem("highscore"))){
+    savehighscore();	
+  }
 }
 
 function changeSpeed() {
   speed = 1000 - score / 50;
-  if(speed < 200) {
+  if (speed < 200) {
     speed = 200;
   }
   clearInterval(timerId);
   timerId = setInterval(moveDown, speed);
 }
 
-function endgame() {
+function endgame(instruction: string) {
   clearInterval(timerId);
   timerId = null;
   savehighscore();
   document.getElementById("score")!.innerHTML = `Score: ${score}`;
   filledsquares = [];
   running = false;
-  alert("Game Over");
+  currentPosition = 4;
+  if (instruction === "reset") {
+    undraw();
+    return;
+  } else if (instruction === "lost") {
+    alert("Game Over");
+  }
 }
 
 function deleteLine(line: number) {
@@ -325,7 +340,7 @@ function newTetrominoe() {
 
 function saveTetrominoe() {
   if (currentPosition < 10) {
-    endgame();
+    endgame("lost");
     return;
   }
   theTetrominoes[currentTetrominoe][currentrotation].forEach((index: any) => {
