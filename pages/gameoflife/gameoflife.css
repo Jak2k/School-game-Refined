@@ -1,0 +1,48 @@
+.grid{
+    display: grid;
+    grid-template-rows: repeat(var(--gridheight), 0.1fr);
+    grid-template-columns: repeat(var(--gridwidth), 0.1fr);
+    max-width: 28em;
+    background: #ffffff;
+    height: 0em;
+    border-radius: 0.5em;
+    box-sizing: border-box;
+    justify-items: center;
+    align-items: center;
+    margin-left: 1em;
+    margin-right: 60em;
+    margin-top: 1em;
+    float: right;
+}
+.grid-item {
+  background: #111;
+  border: #ffffff;
+  height: 1.6em;
+  width: 1.6em;
+  border-radius: 0em;
+  border: 0.05em solid #ffffff;
+}
+.cells{
+    height: 2em;
+    width: 2em;
+    background-color: black;
+}
+input{
+  border-color: black; 
+  margin: 1em;
+  border-radius: 0.5em;
+  font-size: 2em;
+  width: 4em;
+}
+.inputbutton{
+  padding-right: 1em;
+  padding-left: 1em;
+  margin: 1em;
+  border-radius: 1em;
+  font-size: 2em;
+  background-color: hsl(240, 40%, 19%);
+  color: white;
+}
+a{
+  font-size: 2em;
+}
