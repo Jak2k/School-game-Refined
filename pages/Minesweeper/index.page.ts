@@ -18,7 +18,7 @@ function createGrid() {
   }
 
 export const serverHTML: ServerHTML = () =>`
-    <a href="..">Back</a>
+    <a href="..">Back</a><br>
     <div class="grid" id="grid">${createGrid()}</div><br>
     <button class="inputbutton" id="setflags">Set Flags</button><br>
     <button class="inputbutton" id="opencells">Open Cells</button><br>
@@ -40,8 +40,6 @@ export const init: Init = () => {
     let board:Array<number> = [];
     let cellsremain:number = 0;
     let neighbors:number = 0;
-    let zerospreading:Array<number> =[];
-    let nonzero:Array<number> = [];
     //Create Mines
     function createmines() {
       cellsremain = 0;
@@ -128,7 +126,6 @@ export const init: Init = () => {
             }
             if(neighbors == 0){
               document.getElementById("cell"+index)!.style.backgroundColor = "lightgray";
-              //zerospread(index);
             }else{
               document.getElementById("cell"+index)!.style.backgroundColor = "lightgray";
               document.getElementById("cell"+index)!.innerHTML = neighbors.toString();
@@ -140,46 +137,6 @@ export const init: Init = () => {
           neighbors = 0;
         }
       })
-    }
-
-    //Zero Spreadingprint
-    function zerospread(cellid:number) {
-      zerospreading.push(cellid);
-      for(let index = 0; index < 900; index++){
-        if(findcells(zerospreading[0])){
-          nonzero.push(zerospreading[0]);
-            for(let i = 0; i < 8; i++) {
-              opencells(zerospreading[0]);
-              reveal(index);
-              zerospreading.shift();
-            }
-        }else{
-          break;
-        }
-      }
-
-    }
-    //Find Cells
-    function findcells(search:number){
-      for(let index = 0; index < nonzero.length; index++){
-        if(nonzero[index] == search){
-          return(false);
-        }else{
-          return(true);
-        }
-      }
-      return(true);
-    }
-    //Reveal Cells
-    function reveal(data:number) {
-      if(neighbors == 0){
-        document.getElementById("cell"+data)!.style.backgroundColor = "lightgray";
-        zerospreading.push(data);
-      }else{
-        document.getElementById("cell"+data)!.style.backgroundColor = "lightgray";
-        document.getElementById("cell"+data)!.innerHTML = neighbors.toString();
-      }
-      neighbors = 0;
     }
     
     function opencells(index:number){

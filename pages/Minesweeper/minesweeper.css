@@ -9,10 +9,9 @@
     box-sizing: border-box;
     justify-items: center;
     align-items: center;
-    margin-left: 1em;
-    margin-right: 60em;
+    margin-left: 30em;
     margin-top: 1em;
-    float: right;
+    float: left;
 }
 
 .grid-item {

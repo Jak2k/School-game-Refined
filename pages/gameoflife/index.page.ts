@@ -7,10 +7,10 @@ if (typeof document === "undefined") {
     querySelector: () => {},
   };
 }
-let gridheight:number = 34;
-let gridwidth:number = 51;
-let dataheight:string = "34";
-let datawidth:string = "51";
+let gridheight:number = 30;
+let gridwidth:number = 30;
+let dataheight:string = "30";
+let datawidth:string = "30";
 //Create Grid
 function createGrid() {
   let grid = "";
@@ -21,7 +21,7 @@ function createGrid() {
   return grid;
 }
 export const serverHTML: ServerHTML = () =>`
-    <a href="..">Back</a>
+    <a href="..">Back</a><br>
     <div class="grid" id="grid"></div><br>
     <button id ="start" class="inputbutton">Start</button>
     <button id ="stop" class="inputbutton">Stop</button><br>
