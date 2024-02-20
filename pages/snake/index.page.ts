@@ -150,6 +150,9 @@ function checkcollision() {
 function eatapple() {
   if (currentSnake[0] == apple) {
     currentSnake.push(appleblock);
+    if(currentSnake.length == Math.pow(fieldsize, 2)) {
+      endgame();
+    }
     spawnapple();
   }
 }
