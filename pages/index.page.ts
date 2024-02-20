@@ -12,7 +12,12 @@ export const serverHTML: ServerHTML = () => `
   <div class="game">
   <button class="gamebutton" onclick="window.location.href = '/calculator'">Rechner</button>
   </div>
-
+  <div class="game">
+  <button class="gamebutton" onclick="window.location.href = '/gameoflife'">Game of Life</button>
+  </div>
+  <div class="game">
+  <button class="gamebutton" onclick="window.location.href = '/Minesweeper'">Minesweeper</button>
+  </div>
 </div>
 <div id="debug"></div>
 `;
