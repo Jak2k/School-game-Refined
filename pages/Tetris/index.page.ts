@@ -236,8 +236,8 @@ function savehighscore() {
 function addscore(points: number) {
   score += points;
   document.getElementById("score")!.innerHTML = `Score: ${score}`;
-  if(score > Number(localStorage.getItem("highscore"))){
-    savehighscore();	
+  if (score > Number(localStorage.getItem("highscore"))) {
+    savehighscore();
   }
 }
 
