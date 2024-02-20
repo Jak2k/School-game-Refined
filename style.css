@@ -1,6 +1,6 @@
 :root {
   --theme-hue: 70;
-  --color-primary: hsl(240, 41%, 19%);
+  --color-primary: hsl(240, 40%, 19%);
   --color-background: hsl(var(--theme-hue), 50%, 90%);
   --color-text: hsl(var(--theme-hue), 50%, 10%);
 }
