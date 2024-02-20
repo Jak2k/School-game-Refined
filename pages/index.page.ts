@@ -3,16 +3,10 @@ import { type ServerHTML, ServerMeta, Init } from "../renderer/types";
 
 export const serverHTML: ServerHTML = () => `
 <div id="games">
-  <div class="game">
-  <button class="gamebutton" onclick="window.location.href = '/2048'">2048</button>
-  </div>
-  <div class="game">
-  <button class="gamebutton" onclick="window.location.href = '/Tetris'">Tetris</button>
-  </div>
-  <div class="game">
-  <button class="gamebutton" onclick="window.location.href = '/calculator'">Rechner</button>
-  </div>
-
+  <button class="game" onclick="windows.location.href = '/2048'">2048</button>
+  <button class="game" onclick="window.location.href = '/Tetris'">Tetris</button>
+  <button class="game" onclick="window.location.href = '/calculator'">Rechner</button>
+  <button class="game" onclick="window.location.href = '/snake'">Snake</button>
 </div>
 <div id="debug"></div>
 `;

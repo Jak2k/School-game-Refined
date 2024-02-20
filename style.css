@@ -29,8 +29,6 @@ body {
 
 .game {
   background-color: var(--color-primary);
-  color: black;
-  border: none;
   padding: 0.5em;
   border-radius: 1em;
   font-weight: 600;
@@ -40,20 +38,12 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-
-.gamebutton {
-  background: #11111100;
-  border: #ffffff;
-  height: 3em;
-  width: 6em;
-  border-radius: 0.5em;
-  border: 0.05em solid #ffffff;
+  border: 3px solid #ffffff;
   color: #ffffff;
-  font-size: 1em;
   font-weight: bold;
   margin: 0.5em;
 }
+
 
 a:link,
 a:visited {
@@ -82,4 +72,20 @@ p {
 
 a {
   color: var(--color-text);
+}
+
+dialog {
+  margin: 0 auto;
+  border: none !important;
+  border-radius: calc(5px * var(--ratio));
+  box-shadow:
+    0 0 #0000,
+    0 0 #0000,
+    0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  max-width: 400px;
+  border-radius: 1em;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
