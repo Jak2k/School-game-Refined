@@ -26,7 +26,8 @@ export const serverHTML: ServerHTML = () => `
     ${createGrid()}
   </div>
   <button id="start">Start</button>
-  <dialog id="dialog">Game Over! 
+  <dialog id="dialog">
+    <p id="Gameendmessage">Game Over!</p>
   <button onclick="document.querySelector('#dialog').close()">Close</button>
   </diaglog>
   `;
@@ -123,8 +124,10 @@ function clearfield() {
   }
 }
 
-function endgame() {
+function endgame(message: string) {
   const dialog = document.querySelector("#dialog") as HTMLDialogElement;
+  const dialogmessage = document.querySelector("#Gameendmessage") as HTMLParagraphElement;
+  dialogmessage.innerHTML = message;
   dialog.showModal();
   clearInterval(timerId);
   clearfield();
@@ -140,10 +143,10 @@ function checkcollision() {
     (currentSnake[0] < 0 && direction == -fieldsize) ||
     (currentSnake[0] > Math.pow(fieldsize, 2) && direction == fieldsize)
   ) {
-    endgame();
+    endgame("Game Over!");
   }
   if (currentSnake.slice(1).includes(currentSnake[0])) {
-    endgame();
+    endgame("Game Over!");
   }
 }
 
@@ -151,7 +154,7 @@ function eatapple() {
   if (currentSnake[0] == apple) {
     currentSnake.push(appleblock);
     if(currentSnake.length == Math.pow(fieldsize, 2)) {
-      endgame();
+      endgame("You Win!");
     }
     spawnapple();
   }
