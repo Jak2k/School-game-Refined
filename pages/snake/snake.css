@@ -24,4 +24,17 @@
   border-radius: 0.5em;
 }
 
-
+button {
+  background: #111;
+  border: #ffffff;
+  height: 3em;
+  width: 6em;
+  border-radius: 0.5em;
+  border: 0.05em solid #ffffff;
+  color: #ffffff;
+  font-size: 1em;
+  font-weight: bold;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  margin-left: 0.5em;
+}
