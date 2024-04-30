@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "lint": "eslint --ext .ts,.js,.tsx,.jsx pages renderer",
     "lint:fix": "eslint --ext .ts,.js,.tsx,.jsx pages renderer --fix",
-    "format": "prettier --write pages renderer"
+    "format": "prettier --write pages renderer",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@nabla/vite-plugin-eslint": "^1.5.0",
@@ -17,11 +18,16 @@
     "@typescript-eslint/parser": "^6.4.0",
     "eslint": "^8.47.0",
     "eslint-config-prettier": "^9.0.0",
+    "husky": "^9.0.11",
     "prettier": "^3.0.2",
     "typescript": "^5.1.6",
     "vite": "^4.4.5"
   },
   "dependencies": {
     "vite-plugin-ssr": "^0.4.136"
+  },
+  "lint-staged": {
+    "*.{ts,js,tsx,jsx}": "eslint --cache --fix",
+    "*.renderer": "prettier --write"
   }
 }
